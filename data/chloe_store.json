@@ -291,6 +291,20 @@
         "preference",
         "cafe"
       ],
+      "id": "mem_1793542271959_wv2i",
+      "userId": "user_owner_s24",
+      "createdAt": "2026-11-01T14:11:11.959Z",
+      "updatedAt": "2026-11-01T14:11:11.959Z"
+    },
+    {
+      "category": "identity_preferences",
+      "title": "Boisson matinale test",
+      "content": "Le propriétaire boit toujours un café noir sans sucre à 8h.",
+      "tags": [
+        "test",
+        "preference",
+        "cafe"
+      ],
       "id": "mem_1793534626909_gb2c",
       "createdAt": "2026-11-01T12:03:46.909Z",
       "updatedAt": "2026-11-01T12:03:46.909Z"
@@ -469,6 +483,22 @@
   ],
   "approvals": [
     {
+      "id": "appr_1793542272690_nbb3",
+      "userId": "user_owner_s24",
+      "action": "Envoi email de test",
+      "service": "Gmail",
+      "payload": {
+        "recipient": "contact@exemple.fr",
+        "subject": "Test",
+        "body": "Bonjour"
+      },
+      "expectedResult": "L'email sera envoyé dès approbation formelle.",
+      "createdAt": "2026-11-01T14:11:12.691Z",
+      "expiresAt": "2026-11-01T14:26:12.691Z",
+      "signature": "47bbcd0e8ebea73f157d522b70b7b3e6e8e8e8d44ca9bf2303cab54feee730b1",
+      "status": "pending"
+    },
+    {
       "id": "appr_1793537167885_17ar",
       "userId": "user_owner_s24",
       "action": "Envoi email de test",
@@ -615,6 +645,66 @@
     }
   ],
   "logs": [
+    {
+      "id": "log_1793542272694_jkra",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-01T14:11:12.694Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793542272693_qcjr)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793542272693_5uh5",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-01T14:11:12.693Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Secret Personnel Propriétaire\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: useful_info"
+    },
+    {
+      "id": "log_1793542272691_3okh",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-01T14:11:12.691Z",
+      "agent": "ACCESS_CONTROL",
+      "action": "Action Niveau 3 en attente de confirmation : Envoi email de test",
+      "level": "LEVEL_3_EXECUTION",
+      "status": "pending",
+      "details": "Service: Gmail (Expire à 14:26:12)"
+    },
+    {
+      "id": "log_1793542271961_d1zc",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-01T14:11:11.961Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793542271960_xckw)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793542271960_ywgr",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-01T14:11:11.960Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Information temporaire à oublier\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: useful_info"
+    },
+    {
+      "id": "log_1793542271959_li3c",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-01T14:11:11.959Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Boisson matinale test\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: identity_preferences"
+    },
     {
       "id": "log_1793540153011_w9dd",
       "userId": "user_owner_s24",
