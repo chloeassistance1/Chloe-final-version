@@ -1,0 +1,11 @@
+{
+  "name": "CHLOÉ AI",
+  "description": "Assistante personnelle intelligente, multimodale et évolutive pour Samsung Galaxy S24 avec système d'agents, compétences et connecteurs.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

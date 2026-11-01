@@ -1,0 +1,629 @@
+{
+  "settings": {
+    "assistantName": "CHLOÉ",
+    "avatarUrl": "/assets/aistudio/chloe-avatar-fullbody_f3fa7d52.webp",
+    "personality": "Féminine, intelligente, calme, respectueuse, attentive, honnête et chaleureuse. S’exprime en français impeccable et s’adapte à son propriétaire sur Samsung Galaxy S24.",
+    "language": "fr",
+    "voiceGender": "female",
+    "voiceSpeed": 1,
+    "voicePitch": 1.05,
+    "model": "gemini-3.8-flash",
+    "theme": "dark",
+    "ecoMode": false,
+    "dailyRequestLimit": 250,
+    "webSearchEnabled": true,
+    "audioAutoSpeak": false,
+    "ownerEmail": "chloeassistance1@gmail.com"
+  },
+  "usage": {
+    "totalRequests": 42,
+    "todayRequests": 14,
+    "estimatedTokens": 64500,
+    "toolInvocations": 38,
+    "documentsIndexed": 1,
+    "storageBytesUsed": 24500,
+    "estimatedCostEur": 0.08,
+    "lastUpdated": "2026-10-31T13:19:01.084Z"
+  },
+  "skills": [
+    {
+      "id": "reasoning",
+      "name": "Raisonnement avancé",
+      "description": "Analyse complexe, calculs précis, décomposition méthodique de projets et synthèse stratégique.",
+      "enabled": true,
+      "accessLevel": "LEVEL_1_CONSULTATION",
+      "permissions": [
+        "compute",
+        "analyze",
+        "plan"
+      ],
+      "dependencies": [],
+      "usageCount": 14
+    },
+    {
+      "id": "voice",
+      "name": "Voix et conversation",
+      "description": "Reconnaissance vocale naturelle, synthèse audio expressive et gestion des silences/interruptions.",
+      "enabled": true,
+      "accessLevel": "LEVEL_1_CONSULTATION",
+      "permissions": [
+        "microphone",
+        "audio_playback"
+      ],
+      "dependencies": [],
+      "usageCount": 8
+    },
+    {
+      "id": "vision",
+      "name": "Vision & Analyse multimodale",
+      "description": "Lecture OCR, analyse de photos Galaxy S24, interprétation de schémas, graphiques et captures.",
+      "enabled": true,
+      "accessLevel": "LEVEL_1_CONSULTATION",
+      "permissions": [
+        "camera",
+        "file_read"
+      ],
+      "dependencies": [],
+      "usageCount": 5
+    },
+    {
+      "id": "memory",
+      "name": "Mémoire personnelle",
+      "description": "Rétention sécurisée des préférences, habitudes, objectifs et faits importants avec contrôle strict.",
+      "enabled": true,
+      "accessLevel": "LEVEL_2_PREPARATION",
+      "permissions": [
+        "memory_read",
+        "memory_write"
+      ],
+      "dependencies": [],
+      "usageCount": 22
+    },
+    {
+      "id": "web_search",
+      "name": "Recherche Internet & Citations",
+      "description": "Vérification de faits récents via Google Search Grounding avec dates et liens vérifiables.",
+      "enabled": true,
+      "accessLevel": "LEVEL_1_CONSULTATION",
+      "permissions": [
+        "network_search"
+      ],
+      "dependencies": [],
+      "usageCount": 19
+    },
+    {
+      "id": "developer",
+      "name": "Programmation & Code",
+      "description": "Génération de composants React, scripts TypeScript/Python, analyse de bugs et architectures.",
+      "enabled": true,
+      "accessLevel": "LEVEL_2_PREPARATION",
+      "permissions": [
+        "code_generation",
+        "syntax_lint"
+      ],
+      "dependencies": [],
+      "usageCount": 12
+    },
+    {
+      "id": "automation",
+      "name": "Automatisation & Workflows",
+      "description": "Planification de tâches récurrentes, scénarios conditionnels et actions automatisées sous surveillance.",
+      "enabled": true,
+      "accessLevel": "LEVEL_3_EXECUTION",
+      "permissions": [
+        "scheduler",
+        "task_dispatch"
+      ],
+      "dependencies": [],
+      "usageCount": 6
+    },
+    {
+      "id": "documents",
+      "name": "Documents & RAG",
+      "description": "Indexation sémantique, découpage de passages et extraction d’informations précises depuis PDF/TXT/MD.",
+      "enabled": true,
+      "accessLevel": "LEVEL_1_CONSULTATION",
+      "permissions": [
+        "storage_read",
+        "vector_search"
+      ],
+      "dependencies": [],
+      "usageCount": 9
+    },
+    {
+      "id": "translation",
+      "name": "Traduction multilingue",
+      "description": "Traduction contextuelle fluide préservant le ton (Français, Anglais, Espagnol, Allemand, Hébreu, Arabe).",
+      "enabled": true,
+      "accessLevel": "LEVEL_1_CONSULTATION",
+      "permissions": [
+        "translation_engine"
+      ],
+      "dependencies": [],
+      "usageCount": 11
+    },
+    {
+      "id": "creative",
+      "name": "Créativité & Contenus",
+      "description": "Brainstorming de concepts, récits, pitchs créatifs et formulations de scénarios percutants.",
+      "enabled": true,
+      "accessLevel": "LEVEL_1_CONSULTATION",
+      "permissions": [
+        "creative_ideation"
+      ],
+      "dependencies": [],
+      "usageCount": 7
+    }
+  ],
+  "connectors": [
+    {
+      "id": "google",
+      "name": "Google Workspace",
+      "description": "Compte Google officiel pour synchronisation Workspace (Gmail, Calendar, Drive).",
+      "status": "connected",
+      "authType": "oauth2",
+      "permissions": [
+        "profile",
+        "email",
+        "openid"
+      ],
+      "lastConnected": "2026-10-31T06:00:00Z",
+      "lastHealthCheck": "2026-10-31T06:05:00Z",
+      "healthMessage": "Service actif et authentifié pour chloeassistance1@gmail.com"
+    },
+    {
+      "id": "gmail",
+      "name": "Gmail API",
+      "description": "Lecture sécurisée, recherche et préparation de brouillons d’emails (Envoi soumis à validation).",
+      "status": "connected",
+      "authType": "oauth2",
+      "permissions": [
+        "gmail.readonly",
+        "gmail.compose",
+        "gmail.send"
+      ],
+      "lastConnected": "2026-10-31T06:00:00Z",
+      "lastHealthCheck": "2026-10-31T06:05:00Z",
+      "healthMessage": "Prêt. Niveau 3 requis pour tout envoi réel."
+    },
+    {
+      "id": "calendar",
+      "name": "Google Calendar",
+      "description": "Consultation des créneaux, planification de réunions et rappels avec vérification du fuseau horaire.",
+      "status": "connected",
+      "authType": "oauth2",
+      "permissions": [
+        "calendar.events",
+        "calendar.readonly"
+      ],
+      "lastConnected": "2026-10-31T06:00:00Z",
+      "lastHealthCheck": "2026-10-31T06:05:00Z",
+      "healthMessage": "Synchronisé avec l’agenda principal."
+    },
+    {
+      "id": "drive",
+      "name": "Google Drive",
+      "description": "Accès aux documents autorisés, recherche sémantique de fichiers et importation de notes.",
+      "status": "connected",
+      "authType": "oauth2",
+      "permissions": [
+        "drive.readonly",
+        "drive.file"
+      ],
+      "lastConnected": "2026-10-31T06:00:00Z",
+      "lastHealthCheck": "2026-10-31T06:05:00Z",
+      "healthMessage": "Prêt pour lecture et indexation."
+    },
+    {
+      "id": "firebase",
+      "name": "Firebase & Firestore",
+      "description": "Stockage Cloud Firestore pour données utilisateur sécurisées et règles de sécurité strictes.",
+      "status": "connected",
+      "authType": "service_account",
+      "permissions": [
+        "firestore.rw",
+        "storage.rw"
+      ],
+      "lastConnected": "2026-10-31T06:00:00Z",
+      "lastHealthCheck": "2026-10-31T06:05:00Z",
+      "healthMessage": "Base de données persistante synchronisée."
+    },
+    {
+      "id": "whatsapp",
+      "name": "WhatsApp Business Cloud API",
+      "description": "Intégration officielle Meta Cloud API (Requiert compte Meta Business et numéro approuvé).",
+      "status": "not_configured",
+      "authType": "webhook",
+      "permissions": [
+        "whatsapp_business_messaging"
+      ],
+      "lastHealthCheck": "2026-10-31T06:00:00Z",
+      "healthMessage": "Non configuré : Nécessite un compte Meta Business et des jetons d’accès approuvés."
+    },
+    {
+      "id": "spotify",
+      "name": "Spotify Web API",
+      "description": "Recherche de morceaux, playlists et contrôle de lecture musicale via OAuth PKCE.",
+      "status": "not_configured",
+      "authType": "oauth2",
+      "permissions": [
+        "user-read-playback-state",
+        "user-modify-playback-state"
+      ],
+      "lastHealthCheck": "2026-10-31T06:00:00Z",
+      "healthMessage": "Non configuré : Nécessite un Client ID Spotify Developer."
+    },
+    {
+      "id": "custom_api",
+      "name": "API REST Personnalisée",
+      "description": "Passerelle extensible pour connecter des endpoints REST sécurisés avec schémas de validation.",
+      "status": "pending",
+      "authType": "api_key",
+      "permissions": [
+        "http_request"
+      ],
+      "lastHealthCheck": "2026-10-31T06:00:00Z",
+      "healthMessage": "En attente d’URL de base et de clé d’API autorisée."
+    }
+  ],
+  "memories": [
+    {
+      "category": "identity_preferences",
+      "title": "Boisson matinale test",
+      "content": "Le propriétaire boit toujours un café noir sans sucre à 8h.",
+      "tags": [
+        "test",
+        "preference",
+        "cafe"
+      ],
+      "id": "mem_1793534446882_25h9",
+      "createdAt": "2026-11-01T12:00:46.882Z",
+      "updatedAt": "2026-11-01T12:00:46.882Z"
+    },
+    {
+      "category": "identity_preferences",
+      "title": "Boisson matinale test",
+      "content": "Le propriétaire boit toujours un café noir sans sucre à 8h.",
+      "tags": [
+        "test",
+        "preference",
+        "cafe"
+      ],
+      "id": "mem_1793452799690_e5se",
+      "createdAt": "2026-10-31T13:19:59.690Z",
+      "updatedAt": "2026-10-31T13:19:59.690Z"
+    },
+    {
+      "category": "identity_preferences",
+      "title": "Boisson matinale test",
+      "content": "Le propriétaire boit toujours un café noir sans sucre à 8h.",
+      "tags": [
+        "test",
+        "preference",
+        "cafe"
+      ],
+      "id": "mem_1793452790461_kwpi",
+      "createdAt": "2026-10-31T13:19:50.461Z",
+      "updatedAt": "2026-10-31T13:19:50.461Z"
+    },
+    {
+      "category": "identity_preferences",
+      "title": "Boisson matinale test",
+      "content": "Le propriétaire boit toujours un café noir sans sucre à 8h.",
+      "tags": [
+        "test",
+        "preference",
+        "cafe"
+      ],
+      "id": "mem_1793452748698_6bjp",
+      "createdAt": "2026-10-31T13:19:08.698Z",
+      "updatedAt": "2026-10-31T13:19:08.698Z"
+    },
+    {
+      "id": "mem_1",
+      "category": "identity_preferences",
+      "title": "Appareil principal",
+      "content": "Le propriétaire utilise exclusivement son smartphone Samsung Galaxy S24. Les interfaces, boutons et flux doivent être optimisés pour une manipulation tactile fluide.",
+      "createdAt": "2026-10-31T13:19:01.083Z",
+      "updatedAt": "2026-10-31T13:19:01.083Z",
+      "tags": [
+        "appareil",
+        "galaxy_s24",
+        "tactile"
+      ],
+      "isPinned": true
+    },
+    {
+      "id": "mem_2",
+      "category": "identity_preferences",
+      "title": "Ton et langue de communication",
+      "content": "Communication principale en français naturel, respectueux, direct et chaleureux, sans formules creuses ni prétention de faux savoirs.",
+      "createdAt": "2026-10-31T13:19:01.083Z",
+      "updatedAt": "2026-10-31T13:19:01.083Z",
+      "tags": [
+        "langue",
+        "francais",
+        "personnalite"
+      ],
+      "isPinned": true
+    },
+    {
+      "id": "mem_3",
+      "category": "habits",
+      "title": "Sécurité et confirmations",
+      "content": "Toute action sensible (envoi d’email, modification d’agenda, suppression de document, exécution d’automatisation) exige une confirmation explicite (Niveau 3).",
+      "createdAt": "2026-10-31T13:19:01.083Z",
+      "updatedAt": "2026-10-31T13:19:01.083Z",
+      "tags": [
+        "securite",
+        "niveau_3",
+        "approbation"
+      ]
+    },
+    {
+      "id": "mem_4",
+      "category": "projects",
+      "title": "Développement de CHLOÉ AI",
+      "content": "Projet majeur : construire une IA personnelle complète, multimodale, sécurisée avec 10 compétences et connecteurs réels.",
+      "createdAt": "2026-10-31T13:19:01.083Z",
+      "updatedAt": "2026-10-31T13:19:01.083Z",
+      "tags": [
+        "projet",
+        "chloe",
+        "ia_personnelle"
+      ]
+    }
+  ],
+  "documents": [
+    {
+      "id": "doc_1",
+      "name": "Guide_CHLOE_AI_Architecture.md",
+      "size": 24500,
+      "type": "text/markdown",
+      "summary": "Spécifications complètes du cerveau central, des 10 compétences, des connecteurs et du contrôle d’accès à 3 niveaux de CHLOÉ.",
+      "chunksCount": 8,
+      "uploadedAt": "2026-10-31T13:19:01.083Z",
+      "content": "# CHLOÉ AI - Architecture Technique\nCHLOÉ AI est une assistante personnelle multimodale conçue pour fonctionner avec une haute exigence de sécurité, de clarté et d'honnêteté intellectuelle.\nElle dispose de 10 compétences modulaires et d'un système de contrôle d'accès en 3 niveaux :\n- Niveau 1 : Consultation en lecture seule.\n- Niveau 2 : Préparation de brouillons et simulations.\n- Niveau 3 : Exécution nécessitant une autorisation explicite de l'utilisateur."
+    }
+  ],
+  "automations": [
+    {
+      "id": "auto_1",
+      "name": "Briefing matinal Galaxy S24",
+      "description": "Synthèse quotidienne de l’agenda Google Calendar, des emails importants et de la météo.",
+      "trigger": "schedule",
+      "triggerDetail": "Tous les jours à 08:00",
+      "conditions": "Connexion Google Calendar et Gmail active",
+      "action": "Générer un résumé concis et préparer les créneaux de la journée.",
+      "accessLevel": "LEVEL_2_PREPARATION",
+      "status": "active",
+      "lastRun": "2026-10-31T07:00:00Z",
+      "nextRun": "2026-11-01T07:00:00Z",
+      "executionCount": 18,
+      "logs": [
+        "[08:00] Briefing généré avec succès. 3 réunions identifiées, 2 emails en attente."
+      ]
+    },
+    {
+      "id": "auto_2",
+      "name": "Nettoyage des pièces jointes temporaires",
+      "description": "Archivage et suppression des fichiers temporaires analysés après 7 jours.",
+      "trigger": "schedule",
+      "triggerDetail": "Chaque dimanche à 23:00",
+      "conditions": "Fichiers orphelins non épinglés",
+      "action": "Purger les fichiers temporaires locaux du cache.",
+      "accessLevel": "LEVEL_3_EXECUTION",
+      "status": "paused",
+      "executionCount": 4,
+      "logs": [
+        "[Dimanche 23:00] Cache purgé : 14 Mo libérés."
+      ]
+    }
+  ],
+  "approvals": [
+    {
+      "id": "appr_1793452800243",
+      "action": "Envoi email de test",
+      "service": "Gmail",
+      "payload": {
+        "recipient": "contact@exemple.fr",
+        "subject": "Test",
+        "body": "Bonjour"
+      },
+      "expectedResult": "L'email sera envoyé dès approbation formelle.",
+      "createdAt": "2026-10-31T13:20:00.243Z",
+      "status": "pending"
+    },
+    {
+      "id": "appr_1793452792093",
+      "action": "Envoi email de test",
+      "service": "Gmail",
+      "payload": {
+        "recipient": "contact@exemple.fr",
+        "subject": "Test",
+        "body": "Bonjour"
+      },
+      "expectedResult": "L'email sera envoyé dès approbation formelle.",
+      "createdAt": "2026-10-31T13:19:52.093Z",
+      "status": "pending"
+    },
+    {
+      "id": "appr_1793452750651",
+      "action": "Envoi email de test",
+      "service": "Gmail",
+      "payload": {
+        "recipient": "contact@exemple.fr",
+        "subject": "Test",
+        "body": "Bonjour"
+      },
+      "expectedResult": "L'email sera envoyé dès approbation formelle.",
+      "createdAt": "2026-10-31T13:19:10.651Z",
+      "status": "pending"
+    }
+  ],
+  "logs": [
+    {
+      "id": "log_1793534446883_t2bm",
+      "timestamp": "2026-11-01T12:00:46.883Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793534446882_md9c)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793534446883_9y7z",
+      "timestamp": "2026-11-01T12:00:46.883Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Information temporaire à oublier\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: useful_info"
+    },
+    {
+      "id": "log_1793534446882_nitp",
+      "timestamp": "2026-11-01T12:00:46.882Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Boisson matinale test\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: identity_preferences"
+    },
+    {
+      "id": "log_1793452800243_91an",
+      "timestamp": "2026-10-31T13:20:00.243Z",
+      "agent": "ACCESS_CONTROL",
+      "action": "Action Niveau 3 en attente de confirmation : Envoi email de test",
+      "level": "LEVEL_3_EXECUTION",
+      "status": "pending",
+      "details": "Service: Gmail"
+    },
+    {
+      "id": "log_1793452799691_73ta",
+      "timestamp": "2026-10-31T13:19:59.691Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793452799690_psgp)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793452799690_n83j",
+      "timestamp": "2026-10-31T13:19:59.690Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Information temporaire à oublier\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: useful_info"
+    },
+    {
+      "id": "log_1793452799690_osns",
+      "timestamp": "2026-10-31T13:19:59.690Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Boisson matinale test\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: identity_preferences"
+    },
+    {
+      "id": "log_1793452792093_7mp2",
+      "timestamp": "2026-10-31T13:19:52.093Z",
+      "agent": "ACCESS_CONTROL",
+      "action": "Action Niveau 3 en attente de confirmation : Envoi email de test",
+      "level": "LEVEL_3_EXECUTION",
+      "status": "pending",
+      "details": "Service: Gmail"
+    },
+    {
+      "id": "log_1793452790462_ru2w",
+      "timestamp": "2026-10-31T13:19:50.462Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793452790462_cju8)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793452790462_o5x3",
+      "timestamp": "2026-10-31T13:19:50.462Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Information temporaire à oublier\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: useful_info"
+    },
+    {
+      "id": "log_1793452790461_mjfi",
+      "timestamp": "2026-10-31T13:19:50.461Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Boisson matinale test\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: identity_preferences"
+    },
+    {
+      "id": "log_1793452750651_zjo6",
+      "timestamp": "2026-10-31T13:19:10.651Z",
+      "agent": "ACCESS_CONTROL",
+      "action": "Action Niveau 3 en attente de confirmation : Envoi email de test",
+      "level": "LEVEL_3_EXECUTION",
+      "status": "pending",
+      "details": "Service: Gmail"
+    },
+    {
+      "id": "log_1793452748699_zoto",
+      "timestamp": "2026-10-31T13:19:08.699Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793452748699_pume)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793452748699_copp",
+      "timestamp": "2026-10-31T13:19:08.699Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Information temporaire à oublier\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: useful_info"
+    },
+    {
+      "id": "log_1793452748698_2rxf",
+      "timestamp": "2026-10-31T13:19:08.698Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Boisson matinale test\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: identity_preferences"
+    },
+    {
+      "id": "log_1",
+      "timestamp": "2026-10-31T13:19:01.084Z",
+      "agent": "ORCHESTRATEUR",
+      "action": "Initialisation du système CHLOÉ AI",
+      "level": "LEVEL_1_CONSULTATION",
+      "status": "success",
+      "details": "Démarrage de l’orchestrateur central sur Samsung Galaxy S24."
+    }
+  ],
+  "conversations": [
+    {
+      "id": "conv_default",
+      "title": "Bienvenue sur CHLOÉ AI",
+      "createdAt": "2026-10-31T13:19:01.084Z",
+      "updatedAt": "2026-10-31T13:19:01.084Z",
+      "messageCount": 1
+    }
+  ],
+  "messages": {
+    "conv_default": [
+      {
+        "id": "msg_welcome",
+        "role": "assistant",
+        "content": "Bonjour ! Je suis **CHLOÉ AI**, votre assistante personnelle intelligente.\n\nJe suis prête à vous accompagner sur votre **Samsung Galaxy S24** avec mes 10 compétences intégrées : raisonnement, vision, voix, mémoire, recherche Internet avec citations, développement de code, documents RAG, automatisations et créativité.\n\nComment puis-je vous aider aujourd'hui ?",
+        "timestamp": "2026-10-31T13:19:01.084Z"
+      }
+    ]
+  }
+}

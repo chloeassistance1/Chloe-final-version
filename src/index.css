@@ -1,0 +1,156 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Safe area insets for Samsung Galaxy S24 and mobile devices */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 16px);
+  }
+}
+
+/* Custom scrollbar for sleek futuristic dark look */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(11, 15, 28, 0.4);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(147, 51, 234, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(168, 85, 247, 0.6);
+}
+
+/* =========================================================================
+   CHLOÉ AI — Procedural GPU Keyframes for Virtual Presence
+   Natural, subtle, non-robotic, respectful and responsive
+   ========================================================================= */
+
+@keyframes chloe-breath-calm {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -2.5px, 0) scale(1.008);
+  }
+}
+
+@keyframes chloe-breath-thinking {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -3.5px, 0) scale(1.012);
+  }
+}
+
+@keyframes chloe-listening-tilt {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -2px, 0) rotate(-0.75deg);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+
+@keyframes chloe-speaking-pulse {
+  0%, 100% {
+    transform: translate3d(0, 0, 0) scale(1);
+    filter: drop-shadow(0 0 25px rgba(168, 85, 247, 0.45));
+  }
+  35% {
+    transform: translate3d(0.5px, -2px, 0) scale(1.01);
+    filter: drop-shadow(0 0 35px rgba(192, 132, 252, 0.65));
+  }
+  70% {
+    transform: translate3d(-0.5px, -1px, 0) scale(1.005);
+    filter: drop-shadow(0 0 30px rgba(168, 85, 247, 0.5));
+  }
+}
+
+@keyframes chloe-aura-pulse {
+  0%, 100% {
+    opacity: 0.55;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.03);
+  }
+}
+
+@keyframes chloe-glow-listening {
+  0%, 100% {
+    opacity: 0.6;
+    transform: scale(1);
+    filter: blur(40px);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.08);
+    filter: blur(55px);
+  }
+}
+
+/* Animation utility classes with GPU acceleration */
+.anim-chloe-idle {
+  animation: chloe-breath-calm 5.5s ease-in-out infinite;
+  will-change: transform;
+}
+
+.anim-chloe-thinking {
+  animation: chloe-breath-thinking 3.8s ease-in-out infinite;
+  will-change: transform;
+}
+
+.anim-chloe-listening {
+  animation: chloe-listening-tilt 4s ease-in-out infinite;
+  will-change: transform;
+}
+
+.anim-chloe-speaking {
+  animation: chloe-speaking-pulse 2.8s ease-in-out infinite;
+  will-change: transform, filter;
+}
+
+.anim-chloe-aura {
+  animation: chloe-aura-pulse 4.5s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+.anim-chloe-glow-active {
+  animation: chloe-glow-listening 2.5s ease-in-out infinite;
+  will-change: transform, opacity, filter;
+}
+
+/* Accessibility: respects user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .anim-chloe-idle,
+  .anim-chloe-thinking,
+  .anim-chloe-listening,
+  .anim-chloe-speaking,
+  .anim-chloe-aura,
+  .anim-chloe-glow-active {
+    animation: none !important;
+    transform: none !important;
+  }
+}
