@@ -38,6 +38,7 @@ import { UsageView } from './components/UsageView.tsx';
 import { AgentsView } from './components/AgentsView.tsx';
 import { TestsAdminView } from './components/TestsAdminView.tsx';
 import { ApprovalModal } from './components/ApprovalModal.tsx';
+import { AvatarProvider } from './context/AvatarContext.tsx';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('chat');
@@ -420,7 +421,8 @@ export default function App() {
   const pendingApprovalsCount = approvals.filter(a => a.status === 'pending').length;
 
   return (
-    <div className="flex flex-col h-screen w-full bg-[#070913] text-slate-100 overflow-hidden font-sans">
+    <AvatarProvider>
+      <div className="flex flex-col h-screen w-full bg-[#070913] text-slate-100 overflow-hidden font-sans">
       {/* PWA In-App Install Banner for Samsung Galaxy S24 */}
       <PWAInstallBanner />
       <OfflineIndicator />
@@ -556,6 +558,7 @@ export default function App() {
           onCancel={() => handleResolveApproval(selectedApproval.id, false)}
         />
       )}
-    </div>
+      </div>
+    </AvatarProvider>
   );
 }

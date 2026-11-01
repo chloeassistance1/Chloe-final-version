@@ -291,76 +291,6 @@
         "preference",
         "cafe"
       ],
-      "id": "mem_1793537167292_jj1t",
-      "userId": "user_owner_s24",
-      "createdAt": "2026-11-01T12:46:07.292Z",
-      "updatedAt": "2026-11-01T12:46:07.292Z"
-    },
-    {
-      "category": "identity_preferences",
-      "title": "Boisson matinale test",
-      "content": "Le propriétaire boit toujours un café noir sans sucre à 8h.",
-      "tags": [
-        "test",
-        "preference",
-        "cafe"
-      ],
-      "id": "mem_1793535440466_h04j",
-      "userId": "user_owner_s24",
-      "createdAt": "2026-11-01T12:17:20.466Z",
-      "updatedAt": "2026-11-01T12:17:20.466Z"
-    },
-    {
-      "category": "identity_preferences",
-      "title": "Boisson matinale test",
-      "content": "Le propriétaire boit toujours un café noir sans sucre à 8h.",
-      "tags": [
-        "test",
-        "preference",
-        "cafe"
-      ],
-      "id": "mem_1793535292097_18jw",
-      "userId": "user_owner_s24",
-      "createdAt": "2026-11-01T12:14:52.097Z",
-      "updatedAt": "2026-11-01T12:14:52.097Z"
-    },
-    {
-      "category": "identity_preferences",
-      "title": "Boisson matinale test",
-      "content": "Le propriétaire boit toujours un café noir sans sucre à 8h.",
-      "tags": [
-        "test",
-        "preference",
-        "cafe"
-      ],
-      "id": "mem_1793535082731_uuer",
-      "userId": "user_owner_s24",
-      "createdAt": "2026-11-01T12:11:22.731Z",
-      "updatedAt": "2026-11-01T12:11:22.731Z"
-    },
-    {
-      "category": "identity_preferences",
-      "title": "Boisson matinale test",
-      "content": "Le propriétaire boit toujours un café noir sans sucre à 8h.",
-      "tags": [
-        "test",
-        "preference",
-        "cafe"
-      ],
-      "id": "mem_1793535038503_wr0i",
-      "userId": "user_owner_s24",
-      "createdAt": "2026-11-01T12:10:38.503Z",
-      "updatedAt": "2026-11-01T12:10:38.503Z"
-    },
-    {
-      "category": "identity_preferences",
-      "title": "Boisson matinale test",
-      "content": "Le propriétaire boit toujours un café noir sans sucre à 8h.",
-      "tags": [
-        "test",
-        "preference",
-        "cafe"
-      ],
       "id": "mem_1793534626909_gb2c",
       "createdAt": "2026-11-01T12:03:46.909Z",
       "updatedAt": "2026-11-01T12:03:46.909Z"
@@ -552,7 +482,7 @@
       "createdAt": "2026-11-01T12:46:07.885Z",
       "expiresAt": "2026-11-01T13:01:07.885Z",
       "signature": "a1abd617963d2a5d83a7b28dbe07ac2097111df1204dd39d38e54eb461091abe",
-      "status": "pending"
+      "status": "expired"
     },
     {
       "id": "appr_1793535441069_4mi5",
@@ -685,6 +615,56 @@
     }
   ],
   "logs": [
+    {
+      "id": "log_1793540153011_w9dd",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-01T13:35:53.011Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793535440466_h04j)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793540152321_ze32",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-01T13:35:52.321Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793537167292_jj1t)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793540148661_2z18",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-01T13:35:48.661Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793535292097_18jw)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793540148049_d3y4",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-01T13:35:48.049Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793535082731_uuer)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793540146895_w0lq",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-01T13:35:46.895Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793535038503_wr0i)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
     {
       "id": "log_1793537167888_gkdf",
       "userId": "user_owner_s24",
