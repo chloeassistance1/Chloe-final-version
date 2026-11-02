@@ -173,6 +173,45 @@
       "healthMessage": "Clé GEMINI_API_KEY valide et active côté serveur."
     },
     {
+      "id": "openai",
+      "name": "OpenAI API (GPT-4o / o3-mini)",
+      "description": "Modèles de pointe OpenAI : GPT-4o, GPT-4o mini, o3-mini et GPT-4.5.",
+      "status": "not_configured",
+      "authType": "api_key",
+      "permissions": [
+        "chat.completions",
+        "multimodal"
+      ],
+      "lastHealthCheck": "2026-11-02T18:48:02.392Z",
+      "healthMessage": "Non configuré : Ajoutez votre clé OpenAI dans les Paramètres."
+    },
+    {
+      "id": "nvidia",
+      "name": "NVIDIA NIM (build.nvidia.com)",
+      "description": "Microservices NVIDIA hébergés sur GPU : Llama 3.3 70B, Mistral Large, DeepSeek R1.",
+      "status": "not_configured",
+      "authType": "api_key",
+      "permissions": [
+        "chat.completions",
+        "gpu_inference"
+      ],
+      "lastHealthCheck": "2026-11-02T18:48:02.392Z",
+      "healthMessage": "Non configuré : Obtenez votre clé sur build.nvidia.com."
+    },
+    {
+      "id": "openrouter",
+      "name": "OpenRouter Unified Gateway",
+      "description": "Passerelle multi-modèles réunissant Claude 3.5 Sonnet, DeepSeek R1 et Llama 3.3.",
+      "status": "not_configured",
+      "authType": "api_key",
+      "permissions": [
+        "chat.completions",
+        "multi_provider"
+      ],
+      "lastHealthCheck": "2026-11-02T18:48:02.392Z",
+      "healthMessage": "Non configuré : Obtenez votre clé sur openrouter.ai."
+    },
+    {
       "id": "google",
       "name": "Google Workspace",
       "description": "Compte Google officiel pour synchronisation Workspace (Gmail, Calendar, Drive).",
@@ -283,6 +322,48 @@
     }
   ],
   "memories": [
+    {
+      "category": "identity_preferences",
+      "title": "Boisson matinale test",
+      "content": "Le propriétaire boit toujours un café noir sans sucre à 8h.",
+      "tags": [
+        "test",
+        "preference",
+        "cafe"
+      ],
+      "id": "mem_1793646105096_ddlm",
+      "userId": "user_owner_s24",
+      "createdAt": "2026-11-02T19:01:45.096Z",
+      "updatedAt": "2026-11-02T19:01:45.096Z"
+    },
+    {
+      "category": "identity_preferences",
+      "title": "Boisson matinale test",
+      "content": "Le propriétaire boit toujours un café noir sans sucre à 8h.",
+      "tags": [
+        "test",
+        "preference",
+        "cafe"
+      ],
+      "id": "mem_1793645282658_y6n3",
+      "userId": "user_owner_s24",
+      "createdAt": "2026-11-02T18:48:02.658Z",
+      "updatedAt": "2026-11-02T18:48:02.658Z"
+    },
+    {
+      "category": "identity_preferences",
+      "title": "Boisson matinale test",
+      "content": "Le propriétaire boit toujours un café noir sans sucre à 8h.",
+      "tags": [
+        "test",
+        "preference",
+        "cafe"
+      ],
+      "id": "mem_1793645235964_owqe",
+      "userId": "user_owner_s24",
+      "createdAt": "2026-11-02T18:47:15.964Z",
+      "updatedAt": "2026-11-02T18:47:15.964Z"
+    },
     {
       "category": "identity_preferences",
       "title": "Boisson matinale test",
@@ -554,6 +635,54 @@
   ],
   "approvals": [
     {
+      "id": "appr_1793646105102_i1ij",
+      "userId": "user_owner_s24",
+      "action": "Envoi email de test",
+      "service": "Gmail",
+      "payload": {
+        "recipient": "contact@exemple.fr",
+        "subject": "Test",
+        "body": "Bonjour"
+      },
+      "expectedResult": "L'email sera envoyé dès approbation formelle.",
+      "createdAt": "2026-11-02T19:01:45.103Z",
+      "expiresAt": "2026-11-02T19:16:45.102Z",
+      "signature": "c7cacff2698f2f3cd6036aa08dd68921688fa282bcb7a8d38b343ca4efa91902",
+      "status": "pending"
+    },
+    {
+      "id": "appr_1793645282662_ueas",
+      "userId": "user_owner_s24",
+      "action": "Envoi email de test",
+      "service": "Gmail",
+      "payload": {
+        "recipient": "contact@exemple.fr",
+        "subject": "Test",
+        "body": "Bonjour"
+      },
+      "expectedResult": "L'email sera envoyé dès approbation formelle.",
+      "createdAt": "2026-11-02T18:48:02.662Z",
+      "expiresAt": "2026-11-02T19:03:02.662Z",
+      "signature": "82612588768a5801b86626e9a4d73d93e5b2f8481cb439f720d313253eb6640e",
+      "status": "pending"
+    },
+    {
+      "id": "appr_1793645236562_57y8",
+      "userId": "user_owner_s24",
+      "action": "Envoi email de test",
+      "service": "Gmail",
+      "payload": {
+        "recipient": "contact@exemple.fr",
+        "subject": "Test",
+        "body": "Bonjour"
+      },
+      "expectedResult": "L'email sera envoyé dès approbation formelle.",
+      "createdAt": "2026-11-02T18:47:16.562Z",
+      "expiresAt": "2026-11-02T19:02:16.562Z",
+      "signature": "871bdddab8c750254e8ee2fa893e542d26691623d5870421575df14ea46734ec",
+      "status": "pending"
+    },
+    {
       "id": "appr_1793644415580_mgz1",
       "userId": "user_owner_s24",
       "action": "Envoi email de test",
@@ -567,7 +696,7 @@
       "createdAt": "2026-11-02T18:33:35.580Z",
       "expiresAt": "2026-11-02T18:48:35.580Z",
       "signature": "5a8468381dd1948182965cb0a9875133952087ae10009d6f9e5c288fc079f90e",
-      "status": "pending"
+      "status": "expired"
     },
     {
       "id": "appr_1793644168201_098z",
@@ -583,7 +712,7 @@
       "createdAt": "2026-11-02T18:29:28.201Z",
       "expiresAt": "2026-11-02T18:44:28.201Z",
       "signature": "becb829b773dc16386560d7eefbe198b2f597726bb7edbc05bbaeb694f499360",
-      "status": "pending"
+      "status": "expired"
     },
     {
       "id": "appr_1793643478616_dj6m",
@@ -796,6 +925,226 @@
     }
   ],
   "logs": [
+    {
+      "id": "log_1793646146785_hvk2",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T19:02:26.785Z",
+      "agent": "MCP_GITHUB_MCP_SERVER",
+      "action": "Appel de l'outil \"github_search_repositories\" (0ms)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Résultat reçu avec succès"
+    },
+    {
+      "id": "log_1793646143029_jsqv",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T19:02:23.029Z",
+      "agent": "MCP_MANAGER",
+      "action": "Serveur MCP mis à jour : \"GitHub MCP Server\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Statut: connected"
+    },
+    {
+      "id": "log_1793646105125_h35c",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T19:01:45.125Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793646105123_xsl7)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793646105123_eypx",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T19:01:45.123Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Secret Personnel Propriétaire\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: useful_info"
+    },
+    {
+      "id": "log_1793646105120_7kl2",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T19:01:45.120Z",
+      "agent": "ACCESS_CONTROL",
+      "action": "Action Niveau 3 en attente de confirmation : Envoi email de test",
+      "level": "LEVEL_3_EXECUTION",
+      "status": "pending",
+      "details": "Service: Gmail (Expire à 19:16:45)"
+    },
+    {
+      "id": "log_1793646105101_lumr",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T19:01:45.101Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793646105099_5ys2)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793646105099_78qf",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T19:01:45.099Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Information temporaire à oublier\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: useful_info"
+    },
+    {
+      "id": "log_1793646105096_ps9a",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T19:01:45.096Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Boisson matinale test\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: identity_preferences"
+    },
+    {
+      "id": "log_1793645282683_50pe",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:48:02.683Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793645282681_lvk0)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793645282681_j4os",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:48:02.681Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Secret Personnel Propriétaire\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: useful_info"
+    },
+    {
+      "id": "log_1793645282679_ns4e",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:48:02.679Z",
+      "agent": "ACCESS_CONTROL",
+      "action": "Action Niveau 3 en attente de confirmation : Envoi email de test",
+      "level": "LEVEL_3_EXECUTION",
+      "status": "pending",
+      "details": "Service: Gmail (Expire à 19:03:02)"
+    },
+    {
+      "id": "log_1793645282660_catv",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:48:02.660Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793645282659_4htn)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793645282659_8m73",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:48:02.659Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Information temporaire à oublier\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: useful_info"
+    },
+    {
+      "id": "log_1793645282658_kqjm",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:48:02.658Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Boisson matinale test\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: identity_preferences"
+    },
+    {
+      "id": "log_1793645236566_fxb8",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:47:16.566Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793645236564_x5oy)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793645236564_gi6w",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:47:16.564Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Secret Personnel Propriétaire\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: useful_info"
+    },
+    {
+      "id": "log_1793645236563_r15k",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:47:16.563Z",
+      "agent": "ACCESS_CONTROL",
+      "action": "Action Niveau 3 en attente de confirmation : Envoi email de test",
+      "level": "LEVEL_3_EXECUTION",
+      "status": "pending",
+      "details": "Service: Gmail (Expire à 19:02:16)"
+    },
+    {
+      "id": "log_1793645235971_2thw",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:47:15.971Z",
+      "agent": "MÉMOIRE",
+      "action": "Mémoire supprimée (ID: mem_1793645235966_o9e9)",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Suppression confirmée"
+    },
+    {
+      "id": "log_1793645235967_104a",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:47:15.967Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Information temporaire à oublier\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: useful_info"
+    },
+    {
+      "id": "log_1793645235964_gqjb",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:47:15.964Z",
+      "agent": "MÉMOIRE",
+      "action": "Nouvelle mémoire ajoutée : \"Boisson matinale test\"",
+      "level": "LEVEL_2_PREPARATION",
+      "status": "success",
+      "details": "Catégorie: identity_preferences"
+    },
+    {
+      "id": "log_1793645090642_509s",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:44:50.642Z",
+      "agent": "ORCHESTRATEUR",
+      "action": "Erreur lors du traitement du message",
+      "level": "LEVEL_1_CONSULTATION",
+      "status": "error",
+      "details": "{\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\"status\":\"RESOURCE_EXHAUSTED\",\"details\":[{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]}]}}"
+    },
+    {
+      "id": "log_1793645090204_mlqm",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:44:50.204Z",
+      "agent": "ORCHESTRATEUR",
+      "action": "Message reçu : \"Bonjour\"",
+      "level": "LEVEL_1_CONSULTATION",
+      "status": "success",
+      "details": "Agent activé: chloe_orchestrator"
+    },
     {
       "id": "log_1793644751798_4yf6",
       "userId": "user_owner_s24",
@@ -1762,8 +2111,8 @@
       "userId": "user_owner_s24",
       "title": "Planifie ma journée avec un rappel",
       "createdAt": "2026-11-02T18:39:04.824Z",
-      "updatedAt": "2026-11-02T18:39:11.185Z",
-      "messageCount": 1
+      "updatedAt": "2026-11-02T18:44:50.203Z",
+      "messageCount": 2
     },
     {
       "id": "conv_1793537134166",
@@ -1804,7 +2153,342 @@
         "content": "Planifie ma journée avec un rappel",
         "id": "msg_1793644751185_k6cz",
         "timestamp": "2026-11-02T18:39:11.185Z"
+      },
+      {
+        "role": "user",
+        "content": "Bonjour",
+        "id": "msg_1793645090203_7b9y",
+        "timestamp": "2026-11-02T18:44:50.203Z"
       }
     ]
+  },
+  "mcpServers": [
+    {
+      "id": "builtin_github",
+      "name": "GitHub MCP Server",
+      "description": "Consulter des dépôts, lire du code, examiner des pull requests et gérer les tickets/issues.",
+      "transport": "http",
+      "url": "https://api.github.com/mcp",
+      "status": "connected",
+      "enabled": true,
+      "tools": [
+        {
+          "name": "github_search_repositories",
+          "description": "Recherche des dépôts GitHub avec critères de langage, étoiles et visibilité.",
+          "enabled": true,
+          "allowedAgents": [
+            "dev_agent",
+            "chloe_orchestrator"
+          ]
+        },
+        {
+          "name": "github_get_file_contents",
+          "description": "Lit le contenu d’un fichier source dans une branche de dépôt.",
+          "enabled": true,
+          "allowedAgents": [
+            "dev_agent"
+          ]
+        },
+        {
+          "name": "github_list_issues",
+          "description": "Liste les anomalies et fonctionnalités demandées sur un dépôt.",
+          "enabled": true,
+          "allowedAgents": [
+            "dev_agent",
+            "chloe_orchestrator"
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "uri": "github://user/repos",
+          "name": "Mes dépôts GitHub",
+          "mimeType": "application/json",
+          "description": "Dépôts du compte connecté"
+        }
+      ],
+      "prompts": [
+        {
+          "name": "analyze_pr",
+          "description": "Audit de code et sécurité"
+        }
+      ],
+      "assignedAgents": [
+        "dev_agent",
+        "chloe_orchestrator"
+      ],
+      "lastPingMs": 1,
+      "lastConnected": "2026-11-02T19:02:23.029Z",
+      "callCount": 7
+    },
+    {
+      "id": "builtin_filesystem",
+      "name": "Filesystem MCP Server (Sandbox)",
+      "description": "Lecture sécurisée des documents locaux, analyse de structures de dossiers et recherche indexée.",
+      "transport": "http",
+      "url": "http://localhost:3000/api/mcp/local/fs",
+      "status": "connected",
+      "enabled": true,
+      "tools": [
+        {
+          "name": "fs_read_document",
+          "description": "Lit un document ou passage indexé dans l’espace CHLOÉ.",
+          "enabled": true,
+          "allowedAgents": [
+            "docs_agent",
+            "dev_agent",
+            "chloe_orchestrator"
+          ]
+        },
+        {
+          "name": "fs_list_sandbox_directory",
+          "description": "Liste les répertoires et fichiers de l’espace sandbox.",
+          "enabled": true,
+          "allowedAgents": [
+            "docs_agent",
+            "dev_agent"
+          ]
+        },
+        {
+          "name": "fs_search_files",
+          "description": "Recherche sémantique par mots-clés dans les documents.",
+          "enabled": true,
+          "allowedAgents": [
+            "docs_agent",
+            "search_agent"
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "uri": "file:///chloe/sandbox/docs",
+          "name": "Bibliothèque RAG",
+          "mimeType": "text/directory"
+        }
+      ],
+      "prompts": [],
+      "assignedAgents": [
+        "docs_agent",
+        "dev_agent"
+      ],
+      "lastPingMs": 12,
+      "lastConnected": "2026-11-02T19:01:44.800Z",
+      "callCount": 14
+    },
+    {
+      "id": "builtin_browser",
+      "name": "Brave Search & Web Browser MCP",
+      "description": "Navigation Internet sécurisée, extraction d’articles et validation de sources en temps réel.",
+      "transport": "http",
+      "url": "https://api.search.brave.com/mcp",
+      "status": "connected",
+      "enabled": true,
+      "tools": [
+        {
+          "name": "browser_web_search",
+          "description": "Recherche web avec résumés, titres et liens vérifiés.",
+          "enabled": true,
+          "allowedAgents": [
+            "search_agent",
+            "chloe_orchestrator"
+          ]
+        },
+        {
+          "name": "browser_fetch_page_content",
+          "description": "Extrait le texte structuré d’une page web publique.",
+          "enabled": true,
+          "allowedAgents": [
+            "search_agent"
+          ]
+        }
+      ],
+      "resources": [],
+      "prompts": [],
+      "assignedAgents": [
+        "search_agent",
+        "chloe_orchestrator"
+      ],
+      "lastPingMs": 65,
+      "lastConnected": "2026-11-02T19:01:44.800Z",
+      "callCount": 9
+    }
+  ],
+  "mcpLogs": [
+    {
+      "serverId": "builtin_github",
+      "serverName": "GitHub MCP Server",
+      "toolName": "github_search_repositories",
+      "args": {},
+      "result": {
+        "count": 3,
+        "repositories": [
+          {
+            "name": "Chloe-final-version",
+            "owner": "chloeassistance1",
+            "stars": 12,
+            "description": "Assistante personnelle CHLOÉ AI pour Samsung Galaxy S24",
+            "private": false
+          },
+          {
+            "name": "android-sdk-tools",
+            "owner": "google",
+            "stars": 450,
+            "description": "Outils de build et wrapper Gradle Android",
+            "private": false
+          },
+          {
+            "name": "capacitor-plugins",
+            "owner": "ionic-team",
+            "stars": 2300,
+            "description": "Plugins natifs Android / iOS pour Capacitor",
+            "private": false
+          }
+        ]
+      },
+      "status": "success",
+      "durationMs": 0,
+      "id": "mcplog_1793646146784_gl40",
+      "timestamp": "2026-11-02T19:02:26.784Z"
+    }
+  ],
+  "agentAssignments": {
+    "dev_agent": {
+      "skills": [
+        "developer",
+        "reasoning",
+        "documents"
+      ],
+      "mcpServers": [
+        "builtin_github",
+        "builtin_filesystem"
+      ],
+      "allowedTools": [
+        "github_search_repositories",
+        "github_get_file_contents",
+        "github_list_issues",
+        "fs_read_document",
+        "fs_list_sandbox_directory"
+      ]
+    },
+    "search_agent": {
+      "skills": [
+        "web_search",
+        "documents",
+        "reasoning"
+      ],
+      "mcpServers": [
+        "builtin_browser",
+        "builtin_filesystem"
+      ],
+      "allowedTools": [
+        "browser_web_search",
+        "browser_fetch_page_content",
+        "fs_search_files"
+      ]
+    },
+    "creative_agent": {
+      "skills": [
+        "creative",
+        "vision",
+        "reasoning"
+      ],
+      "mcpServers": [],
+      "allowedTools": []
+    },
+    "docs_agent": {
+      "skills": [
+        "documents",
+        "reasoning",
+        "memory"
+      ],
+      "mcpServers": [
+        "builtin_filesystem"
+      ],
+      "allowedTools": [
+        "fs_read_document",
+        "fs_list_sandbox_directory",
+        "fs_search_files"
+      ]
+    },
+    "comm_agent": {
+      "skills": [
+        "translation",
+        "voice",
+        "reasoning"
+      ],
+      "mcpServers": [],
+      "allowedTools": []
+    },
+    "personal_agent": {
+      "skills": [
+        "memory",
+        "voice",
+        "reasoning"
+      ],
+      "mcpServers": [],
+      "allowedTools": []
+    },
+    "security_agent": {
+      "skills": [
+        "reasoning"
+      ],
+      "mcpServers": [
+        "builtin_filesystem"
+      ],
+      "allowedTools": [
+        "fs_search_files"
+      ]
+    },
+    "automation_agent": {
+      "skills": [
+        "automation",
+        "reasoning"
+      ],
+      "mcpServers": [
+        "builtin_github",
+        "builtin_filesystem"
+      ],
+      "allowedTools": [
+        "fs_read_document",
+        "github_list_issues"
+      ]
+    },
+    "quality_agent": {
+      "skills": [
+        "reasoning",
+        "developer"
+      ],
+      "mcpServers": [
+        "builtin_github"
+      ],
+      "allowedTools": [
+        "github_get_file_contents"
+      ]
+    },
+    "chloe_orchestrator": {
+      "skills": [
+        "reasoning",
+        "voice",
+        "vision",
+        "memory",
+        "web_search",
+        "developer",
+        "automation",
+        "documents",
+        "translation",
+        "creative"
+      ],
+      "mcpServers": [
+        "builtin_github",
+        "builtin_filesystem",
+        "builtin_browser"
+      ],
+      "allowedTools": [
+        "github_search_repositories",
+        "github_list_issues",
+        "fs_read_document",
+        "browser_web_search"
+      ]
+    }
   }
 }

@@ -14,7 +14,10 @@ import {
   ChatMessage,
   Conversation,
   UserSettings,
-  SystemUsage
+  SystemUsage,
+  MCPServerConfig,
+  MCPCallLog,
+  SkillHistoryEntry
 } from '../shared/types.ts';
 import { createOverlappingChunks } from './rag.ts';
 
@@ -33,6 +36,9 @@ interface DBData {
   usage: SystemUsage;
   skills: SkillConfig[];
   connectors: ConnectorConfig[];
+  mcpServers: MCPServerConfig[];
+  mcpLogs: MCPCallLog[];
+  agentAssignments: Record<string, { skills: string[]; mcpServers: string[]; allowedTools: string[] }>;
   memories: MemoryItem[];
   documents: DocumentItem[];
   automations: AutomationTask[];
@@ -159,6 +165,42 @@ const DEFAULT_CONNECTORS: ConnectorConfig[] = [
     healthMessage: process.env.GEMINI_API_KEY
       ? 'Clé GEMINI_API_KEY valide et active côté serveur.'
       : 'Clé non détectée dans les secrets AI Studio.',
+  },
+  {
+    id: 'openai',
+    name: 'OpenAI API (GPT-4o / o3-mini)',
+    description: 'Modèles de pointe OpenAI : GPT-4o, GPT-4o mini, o3-mini et GPT-4.5.',
+    status: process.env.OPENAI_API_KEY ? 'connected_and_tested' : 'not_configured',
+    authType: 'api_key',
+    permissions: ['chat.completions', 'multimodal'],
+    lastHealthCheck: new Date().toISOString(),
+    healthMessage: process.env.OPENAI_API_KEY
+      ? 'Clé OPENAI_API_KEY configurée.'
+      : 'Non configuré : Ajoutez votre clé OpenAI dans les Paramètres.',
+  },
+  {
+    id: 'nvidia',
+    name: 'NVIDIA NIM (build.nvidia.com)',
+    description: 'Microservices NVIDIA hébergés sur GPU : Llama 3.3 70B, Mistral Large, DeepSeek R1.',
+    status: process.env.NVIDIA_API_KEY ? 'connected_and_tested' : 'not_configured',
+    authType: 'api_key',
+    permissions: ['chat.completions', 'gpu_inference'],
+    lastHealthCheck: new Date().toISOString(),
+    healthMessage: process.env.NVIDIA_API_KEY
+      ? 'Clé NVIDIA_API_KEY configurée.'
+      : 'Non configuré : Obtenez votre clé sur build.nvidia.com.',
+  },
+  {
+    id: 'openrouter',
+    name: 'OpenRouter Unified Gateway',
+    description: 'Passerelle multi-modèles réunissant Claude 3.5 Sonnet, DeepSeek R1 et Llama 3.3.',
+    status: process.env.OPENROUTER_API_KEY ? 'connected_and_tested' : 'not_configured',
+    authType: 'api_key',
+    permissions: ['chat.completions', 'multi_provider'],
+    lastHealthCheck: new Date().toISOString(),
+    healthMessage: process.env.OPENROUTER_API_KEY
+      ? 'Clé OPENROUTER_API_KEY configurée.'
+      : 'Non configuré : Obtenez votre clé sur openrouter.ai.',
   },
   {
     id: 'google',
@@ -348,6 +390,167 @@ const DEFAULT_AUTOMATIONS: AutomationTask[] = [
   },
 ];
 
+const DEFAULT_MCP_SERVERS: MCPServerConfig[] = [
+  {
+    id: 'builtin_github',
+    name: 'GitHub MCP Server',
+    description: 'Consulter des dépôts, lire du code, examiner des pull requests et gérer les tickets/issues.',
+    transport: 'http',
+    url: 'https://api.github.com/mcp',
+    status: 'connected',
+    enabled: true,
+    tools: [
+      {
+        name: 'github_search_repositories',
+        description: 'Recherche des dépôts GitHub avec critères de langage, étoiles et visibilité.',
+        enabled: true,
+        allowedAgents: ['dev_agent', 'chloe_orchestrator'],
+      },
+      {
+        name: 'github_get_file_contents',
+        description: 'Lit le contenu d’un fichier source dans une branche de dépôt.',
+        enabled: true,
+        allowedAgents: ['dev_agent'],
+      },
+      {
+        name: 'github_list_issues',
+        description: 'Liste les anomalies et fonctionnalités demandées sur un dépôt.',
+        enabled: true,
+        allowedAgents: ['dev_agent', 'chloe_orchestrator'],
+      },
+    ],
+    resources: [
+      { uri: 'github://user/repos', name: 'Mes dépôts GitHub', mimeType: 'application/json', description: 'Dépôts du compte connecté' },
+    ],
+    prompts: [
+      { name: 'analyze_pr', description: 'Audit de code et sécurité' },
+    ],
+    assignedAgents: ['dev_agent', 'chloe_orchestrator'],
+    lastPingMs: 42,
+    lastConnected: new Date().toISOString(),
+    callCount: 6,
+  },
+  {
+    id: 'builtin_filesystem',
+    name: 'Filesystem MCP Server (Sandbox)',
+    description: 'Lecture sécurisée des documents locaux, analyse de structures de dossiers et recherche indexée.',
+    transport: 'http',
+    url: 'http://localhost:3000/api/mcp/local/fs',
+    status: 'connected',
+    enabled: true,
+    tools: [
+      {
+        name: 'fs_read_document',
+        description: 'Lit un document ou passage indexé dans l’espace CHLOÉ.',
+        enabled: true,
+        allowedAgents: ['docs_agent', 'dev_agent', 'chloe_orchestrator'],
+      },
+      {
+        name: 'fs_list_sandbox_directory',
+        description: 'Liste les répertoires et fichiers de l’espace sandbox.',
+        enabled: true,
+        allowedAgents: ['docs_agent', 'dev_agent'],
+      },
+      {
+        name: 'fs_search_files',
+        description: 'Recherche sémantique par mots-clés dans les documents.',
+        enabled: true,
+        allowedAgents: ['docs_agent', 'search_agent'],
+      },
+    ],
+    resources: [
+      { uri: 'file:///chloe/sandbox/docs', name: 'Bibliothèque RAG', mimeType: 'text/directory' },
+    ],
+    prompts: [],
+    assignedAgents: ['docs_agent', 'dev_agent'],
+    lastPingMs: 12,
+    lastConnected: new Date().toISOString(),
+    callCount: 14,
+  },
+  {
+    id: 'builtin_browser',
+    name: 'Brave Search & Web Browser MCP',
+    description: 'Navigation Internet sécurisée, extraction d’articles et validation de sources en temps réel.',
+    transport: 'http',
+    url: 'https://api.search.brave.com/mcp',
+    status: 'connected',
+    enabled: true,
+    tools: [
+      {
+        name: 'browser_web_search',
+        description: 'Recherche web avec résumés, titres et liens vérifiés.',
+        enabled: true,
+        allowedAgents: ['search_agent', 'chloe_orchestrator'],
+      },
+      {
+        name: 'browser_fetch_page_content',
+        description: 'Extrait le texte structuré d’une page web publique.',
+        enabled: true,
+        allowedAgents: ['search_agent'],
+      },
+    ],
+    resources: [],
+    prompts: [],
+    assignedAgents: ['search_agent', 'chloe_orchestrator'],
+    lastPingMs: 65,
+    lastConnected: new Date().toISOString(),
+    callCount: 9,
+  },
+];
+
+const DEFAULT_AGENT_ASSIGNMENTS: Record<string, { skills: string[]; mcpServers: string[]; allowedTools: string[] }> = {
+  dev_agent: {
+    skills: ['developer', 'reasoning', 'documents'],
+    mcpServers: ['builtin_github', 'builtin_filesystem'],
+    allowedTools: ['github_search_repositories', 'github_get_file_contents', 'github_list_issues', 'fs_read_document', 'fs_list_sandbox_directory'],
+  },
+  search_agent: {
+    skills: ['web_search', 'documents', 'reasoning'],
+    mcpServers: ['builtin_browser', 'builtin_filesystem'],
+    allowedTools: ['browser_web_search', 'browser_fetch_page_content', 'fs_search_files'],
+  },
+  creative_agent: {
+    skills: ['creative', 'vision', 'reasoning'],
+    mcpServers: [],
+    allowedTools: [],
+  },
+  docs_agent: {
+    skills: ['documents', 'reasoning', 'memory'],
+    mcpServers: ['builtin_filesystem'],
+    allowedTools: ['fs_read_document', 'fs_list_sandbox_directory', 'fs_search_files'],
+  },
+  comm_agent: {
+    skills: ['translation', 'voice', 'reasoning'],
+    mcpServers: [],
+    allowedTools: [],
+  },
+  personal_agent: {
+    skills: ['memory', 'voice', 'reasoning'],
+    mcpServers: [],
+    allowedTools: [],
+  },
+  security_agent: {
+    skills: ['reasoning'],
+    mcpServers: ['builtin_filesystem'],
+    allowedTools: ['fs_search_files'],
+  },
+  automation_agent: {
+    skills: ['automation', 'reasoning'],
+    mcpServers: ['builtin_github', 'builtin_filesystem'],
+    allowedTools: ['fs_read_document', 'github_list_issues'],
+  },
+  quality_agent: {
+    skills: ['reasoning', 'developer'],
+    mcpServers: ['builtin_github'],
+    allowedTools: ['github_get_file_contents'],
+  },
+  chloe_orchestrator: {
+    skills: ['reasoning', 'voice', 'vision', 'memory', 'web_search', 'developer', 'automation', 'documents', 'translation', 'creative'],
+    mcpServers: ['builtin_github', 'builtin_filesystem', 'builtin_browser'],
+    allowedTools: ['github_search_repositories', 'github_list_issues', 'fs_read_document', 'browser_web_search'],
+  },
+};
+
 class Database {
   private data: DBData;
 
@@ -387,10 +590,23 @@ class Database {
             })
           : DEFAULT_DOCUMENTS;
 
+        const mcpServers = (parsed.mcpServers && parsed.mcpServers.length > 0)
+          ? parsed.mcpServers
+          : DEFAULT_MCP_SERVERS;
+        const mcpLogs = parsed.mcpLogs || [];
+        const agentAssignments = parsed.agentAssignments || DEFAULT_AGENT_ASSIGNMENTS;
+        const skills = (parsed.skills && parsed.skills.length > 0)
+          ? parsed.skills
+          : DEFAULT_SKILLS;
+
         return {
           ...parsed,
+          skills,
           connectors,
           documents,
+          mcpServers,
+          mcpLogs,
+          agentAssignments,
         };
       }
     } catch (e) {
@@ -412,6 +628,9 @@ class Database {
       },
       skills: DEFAULT_SKILLS,
       connectors: DEFAULT_CONNECTORS,
+      mcpServers: DEFAULT_MCP_SERVERS,
+      mcpLogs: [],
+      agentAssignments: DEFAULT_AGENT_ASSIGNMENTS,
       memories: DEFAULT_MEMORIES,
       documents: DEFAULT_DOCUMENTS,
       automations: DEFAULT_AUTOMATIONS,
@@ -487,9 +706,110 @@ class Database {
     this.save();
   }
 
-  // Skills
+  // Skills Manager (100% Personnalisable)
   public getSkills(): SkillConfig[] {
     return this.data.skills;
+  }
+
+  public getSkill(id: string): SkillConfig | undefined {
+    return this.data.skills.find(x => x.id === id);
+  }
+
+  public addSkill(skill: Partial<SkillConfig>): SkillConfig {
+    const id = skill.id?.trim() || `skill_custom_${Date.now()}`;
+    const newSkill: SkillConfig = {
+      id,
+      name: skill.name || 'Nouvelle compétence',
+      description: skill.description || 'Description personnalisée',
+      category: skill.category || 'custom',
+      icon: skill.icon || 'Sparkles',
+      enabled: skill.enabled !== undefined ? skill.enabled : true,
+      accessLevel: skill.accessLevel || 'LEVEL_1_CONSULTATION',
+      permissions: skill.permissions && skill.permissions.length > 0 ? skill.permissions : ['custom_action'],
+      dependencies: skill.dependencies || [],
+      systemPrompt: skill.systemPrompt || '',
+      userPromptTemplate: skill.userPromptTemplate || '',
+      recommendedModel: skill.recommendedModel || 'gemini-3.8-flash',
+      compatibleApis: skill.compatibleApis || ['gemini', 'openai'],
+      allowedAgents: skill.allowedAgents || ['chloe_orchestrator', 'personal_agent'],
+      rateLimitDaily: skill.rateLimitDaily || 100,
+      isCustom: true,
+      usageCount: 0,
+      stats: {
+        totalCalls: 0,
+        successCalls: 0,
+        failedCalls: 0,
+        avgLatencyMs: 0,
+      },
+      history: [
+        {
+          timestamp: new Date().toISOString(),
+          action: 'Création de la compétence',
+          status: 'success',
+          details: 'Compétence personnalisée créée',
+        },
+      ],
+    };
+    this.data.skills.push(newSkill);
+    this.log(OWNER_USER_ID, 'SKILL_MANAGER', `Nouvelle compétence créée : "${newSkill.name}"`, 'LEVEL_2_PREPARATION', 'success', `ID: ${id}`);
+    this.save();
+    return newSkill;
+  }
+
+  public updateSkill(id: string, updates: Partial<SkillConfig>): SkillConfig | undefined {
+    const s = this.data.skills.find(x => x.id === id);
+    if (s) {
+      Object.assign(s, updates);
+      if (!s.history) s.history = [];
+      s.history.unshift({
+        timestamp: new Date().toISOString(),
+        action: 'Mise à jour des paramètres',
+        status: 'success',
+      });
+      this.log(OWNER_USER_ID, 'SKILL_MANAGER', `Compétence mise à jour : "${s.name}"`, 'LEVEL_2_PREPARATION', 'success', `ID: ${id}`);
+      this.save();
+    }
+    return s;
+  }
+
+  public deleteSkill(id: string): boolean {
+    const idx = this.data.skills.findIndex(x => x.id === id);
+    if (idx === -1) return false;
+    const s = this.data.skills[idx];
+    const systemIds = ['reasoning', 'voice', 'vision', 'memory', 'web_search', 'developer', 'automation', 'documents', 'translation', 'creative'];
+    if (!s.isCustom && systemIds.includes(s.id)) {
+      throw new Error(`La compétence native "${s.name}" ne peut pas être supprimée. Vous pouvez la désactiver.`);
+    }
+    this.data.skills.splice(idx, 1);
+    this.log(OWNER_USER_ID, 'SKILL_MANAGER', `Compétence supprimée : "${s.name}"`, 'LEVEL_2_PREPARATION', 'warning', `ID: ${id}`);
+    this.save();
+    return true;
+  }
+
+  public duplicateSkill(id: string): SkillConfig | undefined {
+    const s = this.data.skills.find(x => x.id === id);
+    if (!s) return undefined;
+    const copyId = `${s.id}_copie_${Date.now()}`;
+    const copySkill: SkillConfig = {
+      ...JSON.parse(JSON.stringify(s)),
+      id: copyId,
+      name: `${s.name} (Copie)`,
+      isCustom: true,
+      usageCount: 0,
+      lastUsed: undefined,
+      history: [
+        {
+          timestamp: new Date().toISOString(),
+          action: 'Duplication',
+          status: 'success',
+          details: `Dupliqué depuis ${s.id}`,
+        },
+      ],
+    };
+    this.data.skills.push(copySkill);
+    this.log(OWNER_USER_ID, 'SKILL_MANAGER', `Compétence dupliquée : "${copySkill.name}"`, 'LEVEL_2_PREPARATION', 'success', `ID: ${copyId}`);
+    this.save();
+    return copySkill;
   }
 
   public toggleSkill(id: string, enabled: boolean): SkillConfig | undefined {
@@ -509,6 +829,160 @@ class Database {
       s.lastUsed = new Date().toISOString();
       this.save();
     }
+  }
+
+  public recordSkillExecution(id: string, success: boolean, latencyMs: number, details?: string): void {
+    const s = this.data.skills.find(x => x.id === id);
+    if (s) {
+      s.usageCount += 1;
+      s.lastUsed = new Date().toISOString();
+      if (!s.stats) {
+        s.stats = { totalCalls: 0, successCalls: 0, failedCalls: 0, avgLatencyMs: latencyMs };
+      }
+      s.stats.totalCalls += 1;
+      if (success) s.stats.successCalls += 1;
+      else s.stats.failedCalls += 1;
+      s.stats.avgLatencyMs = Math.round((s.stats.avgLatencyMs * (s.stats.totalCalls - 1) + latencyMs) / s.stats.totalCalls);
+
+      if (!s.history) s.history = [];
+      s.history.unshift({
+        timestamp: new Date().toISOString(),
+        action: 'Test d’exécution',
+        status: success ? 'success' : 'error',
+        latencyMs,
+        details,
+      });
+      if (s.history.length > 50) s.history = s.history.slice(0, 50);
+      this.save();
+    }
+  }
+
+  // MCP Manager (Model Context Protocol)
+  public getMCPServers(): MCPServerConfig[] {
+    return this.data.mcpServers || [];
+  }
+
+  public getMCPServer(id: string): MCPServerConfig | undefined {
+    return (this.data.mcpServers || []).find(s => s.id === id);
+  }
+
+  public addMCPServer(server: Partial<MCPServerConfig>): MCPServerConfig {
+    if (!this.data.mcpServers) this.data.mcpServers = [];
+    const id = server.id?.trim() || `mcp_srv_${Date.now()}`;
+    const newServer: MCPServerConfig = {
+      id,
+      name: server.name || 'Serveur MCP',
+      description: server.description || 'Serveur Model Context Protocol',
+      transport: server.transport || 'http',
+      url: server.url || 'http://localhost:3000/mcp',
+      command: server.command,
+      headers: server.headers || {},
+      apiKey: server.apiKey,
+      maskedKey: server.apiKey ? (server.apiKey.length > 8 ? `${server.apiKey.slice(0, 4)}••••${server.apiKey.slice(-4)}` : '••••••••') : undefined,
+      status: 'connected',
+      enabled: server.enabled !== undefined ? server.enabled : true,
+      tools: server.tools || [],
+      resources: server.resources || [],
+      prompts: server.prompts || [],
+      assignedAgents: server.assignedAgents || ['dev_agent', 'chloe_orchestrator'],
+      callCount: 0,
+    };
+    this.data.mcpServers.push(newServer);
+    this.log(OWNER_USER_ID, 'MCP_MANAGER', `Nouveau serveur MCP ajouté : "${newServer.name}"`, 'LEVEL_2_PREPARATION', 'success', `Transport: ${newServer.transport}, URL: ${newServer.url}`);
+    this.save();
+    return newServer;
+  }
+
+  public updateMCPServer(id: string, updates: Partial<MCPServerConfig>): MCPServerConfig | undefined {
+    if (!this.data.mcpServers) this.data.mcpServers = [];
+    const s = this.data.mcpServers.find(x => x.id === id);
+    if (s) {
+      if (updates.apiKey) {
+        updates.maskedKey = updates.apiKey.length > 8 ? `${updates.apiKey.slice(0, 4)}••••${updates.apiKey.slice(-4)}` : '••••••••';
+      }
+      Object.assign(s, updates);
+      this.log(OWNER_USER_ID, 'MCP_MANAGER', `Serveur MCP mis à jour : "${s.name}"`, 'LEVEL_2_PREPARATION', 'success', `Statut: ${s.status}`);
+      this.save();
+    }
+    return s;
+  }
+
+  public deleteMCPServer(id: string): boolean {
+    if (!this.data.mcpServers) return false;
+    const idx = this.data.mcpServers.findIndex(x => x.id === id);
+    if (idx === -1) return false;
+    const s = this.data.mcpServers[idx];
+    this.data.mcpServers.splice(idx, 1);
+    this.log(OWNER_USER_ID, 'MCP_MANAGER', `Serveur MCP supprimé : "${s.name}"`, 'LEVEL_2_PREPARATION', 'warning', `ID: ${id}`);
+    this.save();
+    return true;
+  }
+
+  public toggleMCPServer(id: string, enabled: boolean): MCPServerConfig | undefined {
+    if (!this.data.mcpServers) return undefined;
+    const s = this.data.mcpServers.find(x => x.id === id);
+    if (s) {
+      s.enabled = enabled;
+      this.log(OWNER_USER_ID, 'MCP_MANAGER', `Serveur MCP ${s.name} ${enabled ? 'activé' : 'désactivé'}`, 'LEVEL_2_PREPARATION', 'success', `ID: ${id}`);
+      this.save();
+    }
+    return s;
+  }
+
+  public toggleMCPTool(serverId: string, toolName: string, enabled: boolean): boolean {
+    if (!this.data.mcpServers) return false;
+    const s = this.data.mcpServers.find(x => x.id === serverId);
+    if (s && s.tools) {
+      const tool = s.tools.find(t => t.name === toolName);
+      if (tool) {
+        tool.enabled = enabled;
+        this.save();
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public getMCPLogs(limit = 50): MCPCallLog[] {
+    return (this.data.mcpLogs || []).slice(0, limit);
+  }
+
+  public recordMCPCall(log: Omit<MCPCallLog, 'id' | 'timestamp'>): MCPCallLog {
+    if (!this.data.mcpLogs) this.data.mcpLogs = [];
+    const entry: MCPCallLog = {
+      ...log,
+      id: `mcplog_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+      timestamp: new Date().toISOString(),
+    };
+    this.data.mcpLogs.unshift(entry);
+    if (this.data.mcpLogs.length > 200) this.data.mcpLogs = this.data.mcpLogs.slice(0, 200);
+
+    const s = (this.data.mcpServers || []).find(x => x.id === log.serverId);
+    if (s) {
+      s.callCount = (s.callCount || 0) + 1;
+    }
+    this.save();
+    return entry;
+  }
+
+  // Agent Assignments (Skills + MCP + Allowed Tools)
+  public getAgentAssignments(): Record<string, { skills: string[]; mcpServers: string[]; allowedTools: string[] }> {
+    return this.data.agentAssignments || DEFAULT_AGENT_ASSIGNMENTS;
+  }
+
+  public updateAgentAssignment(
+    agentId: string,
+    assignment: { skills?: string[]; mcpServers?: string[]; allowedTools?: string[] }
+  ): void {
+    if (!this.data.agentAssignments) this.data.agentAssignments = { ...DEFAULT_AGENT_ASSIGNMENTS };
+    const current = this.data.agentAssignments[agentId] || { skills: [], mcpServers: [], allowedTools: [] };
+    this.data.agentAssignments[agentId] = {
+      skills: assignment.skills !== undefined ? assignment.skills : current.skills,
+      mcpServers: assignment.mcpServers !== undefined ? assignment.mcpServers : current.mcpServers,
+      allowedTools: assignment.allowedTools !== undefined ? assignment.allowedTools : current.allowedTools,
+    };
+    this.log(OWNER_USER_ID, 'MULTI_AGENTS', `Attributions mises à jour pour l'agent "${agentId}"`, 'LEVEL_2_PREPARATION', 'success', `Skills: ${this.data.agentAssignments[agentId].skills.length}, MCPs: ${this.data.agentAssignments[agentId].mcpServers.length}`);
+    this.save();
   }
 
   // Connectors

@@ -14,6 +14,9 @@ export type SkillId =
 
 export type ConnectorId = 
   | 'gemini'
+  | 'openai'
+  | 'nvidia'
+  | 'openrouter'
   | 'google'
   | 'gmail'
   | 'calendar'
@@ -22,6 +25,21 @@ export type ConnectorId =
   | 'whatsapp'
   | 'spotify'
   | 'custom_api';
+
+export type AIProviderId = 'gemini' | 'openai' | 'nvidia' | 'openrouter';
+
+export interface AIProviderConfig {
+  id: AIProviderId;
+  name: string;
+  endpoint: string;
+  description: string;
+  keyUrl: string;
+  hasKey: boolean;
+  maskedKey: string;
+  status: 'connected' | 'not_configured' | 'error';
+  models: string[];
+  selectedModel: string;
+}
 
 export type ConnectorStatus = 
   | 'connected_and_tested'
@@ -43,6 +61,25 @@ export type AgentId =
   | 'security_agent'
   | 'quality_agent';
 
+export type SkillCategory =
+  | 'reasoning'
+  | 'developer'
+  | 'coding'
+  | 'web_search'
+  | 'search'
+  | 'documents'
+  | 'files'
+  | 'creative'
+  | 'creativity'
+  | 'vision'
+  | 'multimodal'
+  | 'voice'
+  | 'audio'
+  | 'automation'
+  | 'memory'
+  | 'communication'
+  | 'custom';
+
 export interface AgentInfo {
   id: AgentId;
   name: string;
@@ -51,19 +88,106 @@ export interface AgentInfo {
   model: string;
   status: 'idle' | 'active' | 'processing' | 'standby';
   tools: string[];
+  skills?: string[];
+  mcpServers?: string[];
   executionCount: number;
 }
 
+export interface SkillHistoryEntry {
+  id?: string;
+  timestamp: string;
+  action: string;
+  status: 'success' | 'error';
+  latencyMs?: number;
+  details?: string;
+  agentId?: string;
+}
+
 export interface SkillConfig {
-  id: SkillId;
+  id: string;
   name: string;
   description: string;
+  category?: SkillCategory;
+  icon?: string;
   enabled: boolean;
   accessLevel: AccessLevel;
   permissions: string[];
   dependencies: string[];
+  systemPrompt?: string;
+  userPromptTemplate?: string;
+  recommendedModel?: string;
+  compatibleApis?: string[];
+  allowedAgents?: AgentId[];
+  rateLimitDaily?: number;
+  isCustom?: boolean;
   lastUsed?: string;
   usageCount: number;
+  stats?: {
+    totalCalls: number;
+    successCalls: number;
+    failedCalls: number;
+    avgLatencyMs: number;
+  };
+  history?: SkillHistoryEntry[];
+}
+
+export interface MCPToolInfo {
+  name: string;
+  description: string;
+  inputSchema?: Record<string, any>;
+  enabled: boolean;
+  allowedAgents?: AgentId[];
+}
+
+export interface MCPResourceInfo {
+  uri: string;
+  name: string;
+  mimeType?: string;
+  description?: string;
+}
+
+export interface MCPPromptInfo {
+  name: string;
+  description?: string;
+  arguments?: { name: string; description?: string; required?: boolean }[];
+}
+
+export interface MCPCallLog {
+  id: string;
+  serverId: string;
+  serverName: string;
+  toolName: string;
+  args: Record<string, any>;
+  result: any;
+  status: 'success' | 'error';
+  durationMs: number;
+  timestamp: string;
+  agentId?: string;
+  error?: string;
+}
+
+export interface MCPServerConfig {
+  id: string;
+  name: string;
+  description: string;
+  transport: 'http' | 'sse' | 'streamable_http' | 'streamable-http' | 'stdio';
+  url?: string;
+  command?: string;
+  args?: string[];
+  headers?: Record<string, string>;
+  apiKey?: string;
+  maskedKey?: string;
+  status: 'connected' | 'disconnected' | 'error' | 'testing';
+  enabled: boolean;
+  tools: MCPToolInfo[];
+  resources: MCPResourceInfo[];
+  prompts: MCPPromptInfo[];
+  assignedAgents: AgentId[];
+  lastPingMs?: number;
+  latencyMs?: number;
+  lastConnected?: string;
+  errorMessage?: string;
+  callCount: number;
 }
 
 export interface ConnectorConfig {
@@ -161,7 +285,7 @@ export interface ActivityLog {
   userId: string;
   timestamp: string;
   agent: string;
-  skillId?: SkillId;
+  skillId?: SkillId | string;
   action: string;
   level: AccessLevel;
   status: 'success' | 'warning' | 'error' | 'pending';

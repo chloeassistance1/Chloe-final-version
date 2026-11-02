@@ -17,7 +17,8 @@ import {
   UserSettings,
   SystemUsage,
   TestResult,
-  AgentInfo
+  AgentInfo,
+  MCPServerConfig
 } from '../shared/types.ts';
 
 import { PWAInstallBanner } from './components/PWAInstallBanner.tsx';
@@ -26,6 +27,7 @@ import { Navigation } from './components/Navigation.tsx';
 import { ChatView } from './components/ChatView.tsx';
 import { ConversationsView } from './components/ConversationsView.tsx';
 import { SkillsView } from './components/SkillsView.tsx';
+import { MCPView } from './components/MCPView.tsx';
 import { ConnectorsView } from './components/ConnectorsView.tsx';
 import { MemoryView } from './components/MemoryView.tsx';
 import { DocumentsView } from './components/DocumentsView.tsx';
@@ -84,6 +86,7 @@ export default function App() {
     ownerEmail: 'chloeassistance1@gmail.com',
   });
   const [tests, setTests] = useState<TestResult[]>([]);
+  const [mcpServers, setMcpServers] = useState<MCPServerConfig[]>([]);
   const [selectedApproval, setSelectedApproval] = useState<PendingApproval | null>(null);
 
   // Initial Data Fetch
@@ -102,6 +105,7 @@ export default function App() {
         settingsRes,
         testsRes,
         agentsRes,
+        mcpRes,
       ] = await Promise.all([
         fetch('/api/conversations').then(r => r.json()),
         fetch('/api/skills').then(r => r.json()),
@@ -115,6 +119,7 @@ export default function App() {
         fetch('/api/settings').then(r => r.json()),
         fetch('/api/tests').then(r => r.json()),
         fetch('/api/agents').then(r => r.json()),
+        fetch('/api/mcp/servers').then(r => r.json()),
       ]);
 
       setConversations(convsRes || []);
@@ -134,6 +139,7 @@ export default function App() {
       setSettings(settingsRes || settings);
       setTests(testsRes || []);
       setAgents(agentsRes || []);
+      setMcpServers(mcpRes || []);
     } catch (err) {
       console.error('Failed to load initial data:', err);
     }
@@ -219,10 +225,14 @@ export default function App() {
       setLogs(updatedLogs);
     } catch (err: any) {
       console.error('Chat error:', err);
+      let content = `Désolée, une erreur est survenue lors du traitement : ${err.message || 'Erreur temporaire'}`;
+      if (/429|quota|RESOURCE_EXHAUSTED/i.test(err.message || '')) {
+        content = `⚠️ **Limite de quota atteinte sur le moteur actuel (Erreur 429 - Quota dépassé).**\n\nVotre quota de requêtes sur ce modèle a été atteint.\n\n👉 **Solution immédiate :** Rendez-vous dans **Paramètres > Fournisseurs d'IA & Clés API** pour activer l'une de vos autres clés (**OpenAI**, **NVIDIA NIM / build.nvidia.com** ou **OpenRouter**), ou patientez quelques minutes le temps du renouvellement de la fenêtre de quota.`;
+      }
       const errorMsg: ChatMessage = {
         id: `err_${Date.now()}`,
         role: 'assistant',
-        content: `Désolée, une erreur est survenue lors du traitement : ${err.message}`,
+        content,
         timestamp: new Date().toISOString(),
       };
       setMessages(prev => [...prev, errorMsg]);
@@ -266,6 +276,117 @@ export default function App() {
 
   const handleTestSkill = async (id: string) => {
     return fetch(`/api/skills/${id}/test`, { method: 'POST' }).then(r => r.json());
+  };
+
+  const handleCreateSkill = async (skillData: Partial<SkillConfig>) => {
+    const created = await fetch('/api/skills', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(skillData),
+    }).then(r => r.json());
+    setSkills(prev => [...prev, created]);
+    return created;
+  };
+
+  const handleUpdateSkill = async (id: string, updates: Partial<SkillConfig>) => {
+    const updated = await fetch(`/api/skills/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates),
+    }).then(r => r.json());
+    setSkills(prev => prev.map(s => (s.id === id ? updated : s)));
+    return updated;
+  };
+
+  const handleDeleteSkill = async (id: string) => {
+    await fetch(`/api/skills/${id}`, { method: 'DELETE' });
+    setSkills(prev => prev.filter(s => s.id !== id));
+  };
+
+  const handleDuplicateSkill = async (id: string) => {
+    const duplicated = await fetch(`/api/skills/${id}/duplicate`, { method: 'POST' }).then(r => r.json());
+    setSkills(prev => [...prev, duplicated]);
+    return duplicated;
+  };
+
+  // MCP Server Actions
+  const handleAddMCPServer = async (serverData: Partial<MCPServerConfig>) => {
+    const created = await fetch('/api/mcp/servers', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(serverData),
+    }).then(r => r.json());
+    setMcpServers(prev => [...prev, created]);
+    return created;
+  };
+
+  const handleUpdateMCPServer = async (id: string, updates: Partial<MCPServerConfig>) => {
+    const updated = await fetch(`/api/mcp/servers/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates),
+    }).then(r => r.json());
+    setMcpServers(prev => prev.map(s => (s.id === id ? updated : s)));
+    return updated;
+  };
+
+  const handleDeleteMCPServer = async (id: string) => {
+    await fetch(`/api/mcp/servers/${id}`, { method: 'DELETE' });
+    setMcpServers(prev => prev.filter(s => s.id !== id));
+  };
+
+  const handleToggleMCPServer = async (id: string, enabled: boolean) => {
+    const updated = await fetch(`/api/mcp/servers/${id}/toggle`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ enabled }),
+    }).then(r => r.json());
+    setMcpServers(prev => prev.map(s => (s.id === id ? updated : s)));
+    return updated;
+  };
+
+  const handleToggleMCPTool = async (serverId: string, toolName: string, enabled: boolean) => {
+    const updated = await fetch(`/api/mcp/servers/${serverId}/tools/${encodeURIComponent(toolName)}/toggle`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ enabled }),
+    }).then(r => r.json());
+    setMcpServers(prev => prev.map(s => (s.id === serverId ? updated : s)));
+    return updated;
+  };
+
+  const handleDiscoverMCPServer = async (id: string) => {
+    const res = await fetch(`/api/mcp/servers/${id}/discover`, { method: 'POST' }).then(r => r.json());
+    if (res.server) {
+      setMcpServers(prev => prev.map(s => (s.id === id ? res.server : s)));
+    }
+    return res;
+  };
+
+  const handleCallMCPTool = async (serverId: string, toolName: string, args: Record<string, any>) => {
+    return fetch(`/api/mcp/servers/${serverId}/call`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ toolName, arguments: args }),
+    }).then(r => r.json());
+  };
+
+  // Agent Assignments Actions
+  const handleUpdateAgentAssignments = async (agentId: string, skillIds: string[], mcpServerIds: string[]) => {
+    const res = await fetch('/api/agents/assignments', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ agentId, skillIds, mcpServerIds }),
+    }).then(r => r.json());
+
+    // Refresh skills and mcp servers to update allowedAgents / assignedAgents
+    const [updatedSkills, updatedMCPs] = await Promise.all([
+      fetch('/api/skills').then(r => r.json()),
+      fetch('/api/mcp/servers').then(r => r.json()),
+    ]);
+    if (updatedSkills) setSkills(updatedSkills);
+    if (updatedMCPs) setMcpServers(updatedMCPs);
+    return res;
   };
 
   // Connector Actions
@@ -465,6 +586,25 @@ export default function App() {
             skills={skills}
             onToggleSkill={handleToggleSkill}
             onTestSkill={handleTestSkill}
+            onCreateSkill={handleCreateSkill}
+            onUpdateSkill={handleUpdateSkill}
+            onDeleteSkill={handleDeleteSkill}
+            onDuplicateSkill={handleDuplicateSkill}
+            agents={agents}
+          />
+        )}
+
+        {activeTab === 'mcp' && (
+          <MCPView
+            servers={mcpServers}
+            onAddServer={handleAddMCPServer}
+            onUpdateServer={handleUpdateMCPServer}
+            onDeleteServer={handleDeleteMCPServer}
+            onToggleServer={handleToggleMCPServer}
+            onToggleTool={handleToggleMCPTool}
+            onDiscoverServer={handleDiscoverMCPServer}
+            onCallTool={handleCallMCPTool}
+            agents={agents}
           />
         )}
 
@@ -538,7 +678,12 @@ export default function App() {
         )}
 
         {activeTab === 'agents' && (
-          <AgentsView agents={agents} />
+          <AgentsView
+            agents={agents}
+            skills={skills}
+            mcpServers={mcpServers}
+            onUpdateAgentAssignments={handleUpdateAgentAssignments}
+          />
         )}
 
         {activeTab === 'tests' && (

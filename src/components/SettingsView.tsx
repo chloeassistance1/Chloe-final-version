@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { UserSettings } from '../../shared/types.ts';
+import React, { useState, useEffect } from 'react';
+import { UserSettings, AIProviderConfig, AIProviderId } from '../../shared/types.ts';
 import {
   Settings,
   User,
@@ -14,9 +14,17 @@ import {
   Shield,
   Sparkles,
   Eye,
+  EyeOff,
   Layers,
   Activity,
-  ShieldCheck
+  ShieldCheck,
+  Key,
+  KeyRound,
+  ExternalLink,
+  RefreshCw,
+  CheckCircle2,
+  AlertCircle,
+  Zap
 } from 'lucide-react';
 import { useAvatarState } from '../hooks/useAvatarState.ts';
 import { AvatarSize, AvatarPosition, AvatarVisibility, AvatarLayoutMode } from '../types/avatar.ts';
@@ -36,6 +44,93 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
 }) => {
   const [form, setForm] = useState<UserSettings>(settings);
   const [savedFeedback, setSavedFeedback] = useState(false);
+
+  // Multi-Provider state
+  const [providers, setProviders] = useState<AIProviderConfig[]>([]);
+  const [activeProvider, setActiveProvider] = useState<AIProviderId>('gemini');
+  const [activeModel, setActiveModel] = useState<string>('gemini-3.8-flash');
+  const [keyInputs, setKeyInputs] = useState<Record<string, string>>({});
+  const [showKeys, setShowKeys] = useState<Record<string, boolean>>({});
+  const [testingId, setTestingId] = useState<string | null>(null);
+  const [testResults, setTestResults] = useState<Record<string, { success: boolean; message: string; latencyMs: number }>>({});
+  const [savingKeyId, setSavingKeyId] = useState<string | null>(null);
+
+  const fetchProviders = async () => {
+    try {
+      const res = await fetch('/api/providers');
+      if (res.ok) {
+        const data = await res.json();
+        setProviders(data.providers || []);
+        setActiveProvider(data.activeProvider || 'gemini');
+        setActiveModel(data.activeModel || 'gemini-3.8-flash');
+      }
+    } catch (e) {
+      console.warn('Erreur chargement providers:', e);
+    }
+  };
+
+  useEffect(() => {
+    fetchProviders();
+  }, []);
+
+  const handleSaveKey = async (id: AIProviderId) => {
+    const key = keyInputs[id];
+    if (!key || !key.trim()) return;
+    setSavingKeyId(id);
+    try {
+      const res = await fetch('/api/providers/key', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, key: key.trim() }),
+      });
+      if (res.ok) {
+        setKeyInputs(prev => ({ ...prev, [id]: '' }));
+        await fetchProviders();
+      }
+    } catch (e) {
+      console.error('Erreur sauvegarde clé:', e);
+    } finally {
+      setSavingKeyId(null);
+    }
+  };
+
+  const handleSelectProvider = async (id: AIProviderId, model?: string) => {
+    try {
+      const res = await fetch('/api/providers/select', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, model }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setActiveProvider(data.activeProvider);
+        setActiveModel(data.activeModel);
+        setProviders(data.providers || []);
+      }
+    } catch (e) {
+      console.error('Erreur sélection provider:', e);
+    }
+  };
+
+  const handleTestProvider = async (id: AIProviderId) => {
+    setTestingId(id);
+    try {
+      const res = await fetch('/api/providers/test', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      setTestResults(prev => ({ ...prev, [id]: data }));
+    } catch (e: any) {
+      setTestResults(prev => ({
+        ...prev,
+        [id]: { success: false, message: e.message || 'Erreur réseau', latencyMs: 0 },
+      }));
+    } finally {
+      setTestingId(null);
+    }
+  };
 
   // Avatar state and preferences
   const avatar = useAvatarState();
@@ -193,6 +288,207 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               className="w-4 h-4 accent-purple-600 rounded"
             />
           </label>
+        </div>
+      </div>
+
+      {/* Section 2: Fournisseurs d'IA & Clés API Multi-Moteurs */}
+      <div className="p-4 rounded-2xl bg-[#0f1428] border border-cyan-500/30 space-y-4">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-xl bg-cyan-600/20 border border-cyan-500/40 flex items-center justify-center text-cyan-300">
+              <KeyRound className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-white text-sm flex items-center gap-2">
+                Fournisseurs d'IA & Clés API Multi-Moteurs
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-950/70 text-cyan-300 border border-cyan-500/40 font-mono">
+                  Anti-Quota 429
+                </span>
+              </h3>
+              <p className="text-[11px] text-slate-400">
+                Configurez vos clés OpenAI, Gemini, build.nvidia.com et OpenRouter pour une continuité sans interruption
+              </p>
+            </div>
+          </div>
+          <button
+            type="button"
+            onClick={fetchProviders}
+            className="p-1.5 rounded-lg bg-slate-800/60 hover:bg-slate-700 text-slate-300 transition-colors"
+            title="Rafraîchir les statuts"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        {/* Active Engine Summary Banner */}
+        <div className="p-3 rounded-xl bg-gradient-to-r from-purple-950/40 to-cyan-950/40 border border-purple-500/30 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <Zap className="w-4 h-4 text-amber-400 shrink-0" />
+            <div>
+              <span className="text-slate-400 block text-[10px] uppercase font-bold tracking-wider">Moteur actuellement actif pour CHLOÉ</span>
+              <span className="text-white font-semibold capitalize">
+                {activeProvider === 'nvidia' ? 'NVIDIA NIM (build.nvidia.com)' : activeProvider} — <span className="font-mono text-purple-300">{activeModel}</span>
+              </span>
+            </div>
+          </div>
+          <span className="text-[10px] px-2.5 py-1 rounded-full bg-emerald-950/60 text-emerald-300 border border-emerald-500/40 font-semibold animate-pulse">
+            En ligne
+          </span>
+        </div>
+
+        {/* Provider Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {providers.map(p => {
+            const isActive = activeProvider === p.id;
+            const inputVal = keyInputs[p.id] || '';
+            const isShowingKey = !!showKeys[p.id];
+            const testResult = testResults[p.id];
+            const isTesting = testingId === p.id;
+            const isSaving = savingKeyId === p.id;
+
+            return (
+              <div
+                key={p.id}
+                className={`p-3.5 rounded-xl border transition-all space-y-3 ${
+                  isActive
+                    ? 'bg-[#121832] border-purple-500/60 shadow-lg shadow-purple-950/40 ring-1 ring-purple-500/30'
+                    : 'bg-[#0a0d1c] border-slate-800/80 hover:border-slate-700'
+                }`}
+              >
+                {/* Header */}
+                <div className="flex items-start justify-between gap-2">
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <h4 className="font-bold text-white text-xs">{p.name}</h4>
+                      {isActive && (
+                        <span className="text-[9px] uppercase px-1.5 py-0.2 rounded bg-purple-600 text-white font-bold">
+                          Actif
+                        </span>
+                      )}
+                    </div>
+                    <a
+                      href={p.keyUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-[10px] text-cyan-400 hover:text-cyan-300 flex items-center gap-1 mt-0.5"
+                    >
+                      <span>Obtenir une clé</span>
+                      <ExternalLink className="w-2.5 h-2.5" />
+                    </a>
+                  </div>
+
+                  <span
+                    className={`text-[10px] px-2 py-0.5 rounded-full font-medium border ${
+                      p.hasKey
+                        ? 'bg-emerald-950/50 text-emerald-300 border-emerald-600/40'
+                        : 'bg-slate-900 text-slate-400 border-slate-700/60'
+                    }`}
+                  >
+                    {p.hasKey ? (p.maskedKey ? p.maskedKey : 'Connecté') : 'Non configuré'}
+                  </span>
+                </div>
+
+                <p className="text-[11px] text-slate-300 leading-relaxed">
+                  {p.description}
+                </p>
+
+                {/* Model Selector */}
+                <div>
+                  <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider mb-1">
+                    Modèle sélectionné :
+                  </label>
+                  <select
+                    value={p.selectedModel}
+                    onChange={e => handleSelectProvider(p.id, e.target.value)}
+                    className="w-full bg-[#141933] border border-slate-700/80 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-purple-500 font-mono"
+                  >
+                    {p.models.map(m => (
+                      <option key={m} value={m}>
+                        {m}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Key Input */}
+                <div className="space-y-1.5 pt-1">
+                  <label className="block text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                    {p.hasKey ? 'Mettre à jour la clé API :' : 'Saisir la clé API :'}
+                  </label>
+                  <div className="flex items-center gap-1.5">
+                    <div className="relative flex-1">
+                      <input
+                        type={isShowingKey ? 'text' : 'password'}
+                        placeholder={p.maskedKey || (p.id === 'openai' ? 'sk-...' : p.id === 'nvidia' ? 'nvapi-...' : 'Clé API...')}
+                        value={inputVal}
+                        onChange={e => setKeyInputs({ ...keyInputs, [p.id]: e.target.value })}
+                        className="w-full bg-[#141933] border border-slate-700/80 rounded-lg px-2.5 py-1.5 text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-500 pr-8 font-mono"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowKeys({ ...showKeys, [p.id]: !isShowingKey })}
+                        className="absolute right-2 top-2 text-slate-400 hover:text-white"
+                        title={isShowingKey ? 'Masquer' : 'Afficher'}
+                      >
+                        {isShowingKey ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                      </button>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => handleSaveKey(p.id)}
+                      disabled={isSaving || !inputVal.trim()}
+                      className="bg-cyan-600 hover:bg-cyan-500 disabled:opacity-40 text-white font-semibold text-[11px] px-3 py-1.5 rounded-lg transition-colors shrink-0 shadow-sm"
+                    >
+                      {isSaving ? '...' : 'Sauvegarder'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Actions: Test & Activate */}
+                <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between gap-2">
+                  <button
+                    type="button"
+                    onClick={() => handleTestProvider(p.id)}
+                    disabled={isTesting || !p.hasKey}
+                    className="text-xs text-slate-300 hover:text-white bg-slate-800/60 hover:bg-slate-800 border border-slate-700/60 px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition-colors disabled:opacity-40"
+                  >
+                    <Activity className="w-3 h-3 text-cyan-400" />
+                    <span>{isTesting ? 'Test...' : 'Tester le ping'}</span>
+                  </button>
+
+                  {!isActive && (
+                    <button
+                      type="button"
+                      onClick={() => handleSelectProvider(p.id, p.selectedModel)}
+                      disabled={!p.hasKey}
+                      className="text-xs bg-purple-600 hover:bg-purple-500 disabled:opacity-40 text-white font-semibold px-3 py-1.5 rounded-lg transition-colors shadow-sm"
+                    >
+                      Activer ce moteur
+                    </button>
+                  )}
+                </div>
+
+                {/* Test Feedback */}
+                {testResult && (
+                  <div
+                    className={`p-2 rounded-lg text-[11px] flex items-start gap-1.5 ${
+                      testResult.success
+                        ? 'bg-emerald-950/40 text-emerald-300 border border-emerald-800/40'
+                        : 'bg-red-950/40 text-red-300 border border-red-800/40'
+                    }`}
+                  >
+                    {testResult.success ? (
+                      <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                    ) : (
+                      <AlertCircle className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
+                    )}
+                    <span className="leading-tight">{testResult.message}</span>
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 

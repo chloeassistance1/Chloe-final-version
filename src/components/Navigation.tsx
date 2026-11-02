@@ -16,7 +16,8 @@ import {
   BarChart3,
   CheckCircle2,
   Smartphone,
-  Users
+  Users,
+  Server
 } from 'lucide-react';
 
 export interface TabItem {
@@ -52,6 +53,7 @@ export const Navigation: React.FC<NavigationProps> = ({
     { id: 'chat', label: '1. Accueil (Chat & IA)', icon: MessageSquare },
     { id: 'conversations', label: '2. Conversations', icon: MessagesSquare },
     { id: 'skills', label: '3. Compétences (Skills)', icon: Brain },
+    { id: 'mcp', label: 'MCP Manager (Protocole)', icon: Server },
     { id: 'connectors', label: '4. Connecteurs Externes', icon: Link2 },
     { id: 'memory', label: '5. Mémoire Personnelle', icon: Bookmark },
     { id: 'documents', label: '6. Documents & RAG', icon: FileText },
