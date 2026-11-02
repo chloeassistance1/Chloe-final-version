@@ -40,11 +40,17 @@ jobs:
           java-version: '21'
           cache: 'gradle'
 
-      - name: 4. Configuration Android SDK
-        uses: android-actions/setup-android@v3
-
-      - name: 4b. Acceptation des Licences Android SDK
+      - name: 4. Configuration Android SDK & Licences
         run: |
+          SDK_DIR="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          echo "ANDROID_HOME=$SDK_DIR" >> $GITHUB_ENV
+          echo "ANDROID_SDK_ROOT=$SDK_DIR" >> $GITHUB_ENV
+          mkdir -p android
+          echo "sdk.dir=$SDK_DIR" > android/local.properties
+          echo "Android SDK configuré : $SDK_DIR"
+          mkdir -p "$SDK_DIR/licenses" 2>/dev/null || true
+          echo -e "\n24333f8a63b6825ea9c5514f83c2829b004d1fee\nd56f5187479451eabf01fb78af6dfcb131a6481e\n84831b9409646a578e447b45250e18d144d800f7" > "$SDK_DIR/licenses/android-sdk-license" 2>/dev/null || true
+          echo -e "\n84831b9409646a578e447b45250e18d144d800f7" > "$SDK_DIR/licenses/android-sdk-preview-license" 2>/dev/null || true
           yes | sdkmanager --licenses 2>/dev/null || true
 
       - name: 5. Installation des dépendances NPM
@@ -67,9 +73,11 @@ jobs:
         run: |
           npx cap sync android
 
-      - name: 10. Droits d'exécution sur le Gradle Wrapper
+      - name: 10. Droits d'exécution sur le Gradle Wrapper et vérification SDK
         run: |
           chmod +x android/gradlew
+          SDK_DIR="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          echo "sdk.dir=$SDK_DIR" > android/local.properties
 
       - name: 11. Compilation Gradle de l'APK (assembleDebug)
         run: |
