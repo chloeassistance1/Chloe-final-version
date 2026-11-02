@@ -43,6 +43,10 @@ jobs:
       - name: 4. Configuration Android SDK
         uses: android-actions/setup-android@v3
 
+      - name: 4b. Acceptation des Licences Android SDK
+        run: |
+          yes | sdkmanager --licenses 2>/dev/null || true
+
       - name: 5. Installation des dépendances NPM
         run: |
           npm ci --legacy-peer-deps 2>/dev/null || npm install --legacy-peer-deps
@@ -53,7 +57,7 @@ jobs:
 
       - name: 7. Exécution des 20 Tests Automatisés du Cerveau CHLOÉ AI
         run: |
-          ./node_modules/.bin/tsx -e 'import { runAllTests } from "./server/tests.ts"; (async () => { const r = await runAllTests(); const passed = r.filter(x => x.status === "passed").length; console.log("TESTS STATUS:", passed, "/", r.length); if (passed !== r.length) { console.error("Test failures detected"); process.exit(1); } })();'
+          npm test
 
       - name: 8. Compilation de l'application Web (Vite + PWA)
         run: |
@@ -70,7 +74,7 @@ jobs:
       - name: 11. Compilation Gradle de l'APK (assembleDebug)
         run: |
           cd android
-          ./gradlew assembleDebug --stacktrace --no-daemon
+          ./gradlew assembleDebug --stacktrace --no-daemon -Dorg.gradle.jvmargs="-Xmx2048m"
 
       - name: 12. Vérification, renommage et calcul de l'empreinte SHA-256
         run: |

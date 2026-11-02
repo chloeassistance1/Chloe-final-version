@@ -288,10 +288,13 @@ export async function runAllTests(): Promise<TestResult[]> {
     let code = "function saluer(nom: string): string { return `Bonjour ${nom}`; }";
     if (ai) {
       try {
-        const res = await ai.models.generateContent({
-          model: 'gemini-3.8-flash',
-          contents: 'Écris une fonction TypeScript simple pour saluer un utilisateur. Renvoie juste le code.',
-        });
+        const res = await withTimeout(
+          ai.models.generateContent({
+            model: 'gemini-3.8-flash',
+            contents: 'Écris une fonction TypeScript simple pour saluer un utilisateur. Renvoie juste le code.',
+          }),
+          2500
+        );
         if (res.text) code = res.text;
       } catch (e: any) {
         code = "function saluer(nom: string): string { return `Bonjour ${nom}`; } // Vérifié localement";
