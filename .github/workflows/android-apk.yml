@@ -86,11 +86,18 @@ jobs:
 
       - name: 12. Vérification, renommage et calcul de l'empreinte SHA-256
         run: |
-          APK_ORIGINAL="android/app/build/outputs/apk/debug/app-debug.apk"
           APK_DEST="android/app/build/outputs/apk/debug/CHLOE-AI-Android-v1.0.0.apk"
           
-          if [ ! -f "$APK_ORIGINAL" ]; then
-            echo "::error::Erreur: Fichier APK introuvable à $APK_ORIGINAL"
+          # Détection dynamique du fichier APK généré
+          if [ -f "android/app/build/outputs/apk/debug/app-debug.apk" ]; then
+            APK_ORIGINAL="android/app/build/outputs/apk/debug/app-debug.apk"
+          else
+            APK_ORIGINAL=$(find android/app/build/outputs/apk -name "*.apk" 2>/dev/null | head -n 1)
+          fi
+          
+          if [ -z "$APK_ORIGINAL" ] || [ ! -f "$APK_ORIGINAL" ]; then
+            echo "::error::Erreur: Fichier APK introuvable après compilation Gradle"
+            find android/app/build -type f 2>/dev/null || true
             exit 1
           fi
 

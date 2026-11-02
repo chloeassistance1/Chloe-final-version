@@ -797,6 +797,26 @@
   ],
   "logs": [
     {
+      "id": "log_1793644751798_4yf6",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:39:11.798Z",
+      "agent": "ORCHESTRATEUR",
+      "action": "Erreur lors du traitement du message",
+      "level": "LEVEL_1_CONSULTATION",
+      "status": "error",
+      "details": "{\"error\":{\"code\":429,\"message\":\"You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \",\"status\":\"RESOURCE_EXHAUSTED\",\"details\":[{\"@type\":\"type.googleapis.com/google.rpc.Help\",\"links\":[{\"description\":\"Learn more about Gemini API quotas\",\"url\":\"https://ai.google.dev/gemini-api/docs/rate-limits\"}]}]}}"
+    },
+    {
+      "id": "log_1793644751186_wbyb",
+      "userId": "user_owner_s24",
+      "timestamp": "2026-11-02T18:39:11.186Z",
+      "agent": "ORCHESTRATEUR",
+      "action": "Message reçu : \"Planifie ma journée avec un rappel\"",
+      "level": "LEVEL_1_CONSULTATION",
+      "status": "success",
+      "details": "Agent activé: automation_agent"
+    },
+    {
       "id": "log_1793644415602_lqnj",
       "userId": "user_owner_s24",
       "timestamp": "2026-11-02T18:33:35.602Z",
@@ -1738,6 +1758,14 @@
   ],
   "conversations": [
     {
+      "id": "conv_1793644744824",
+      "userId": "user_owner_s24",
+      "title": "Planifie ma journée avec un rappel",
+      "createdAt": "2026-11-02T18:39:04.824Z",
+      "updatedAt": "2026-11-02T18:39:11.185Z",
+      "messageCount": 1
+    },
+    {
       "id": "conv_1793537134166",
       "userId": "user_owner_s24",
       "title": "Analyse mes documents RAG et r",
@@ -1768,6 +1796,14 @@
         "content": "Analyse mes documents RAG et réponds à cette question : Résume-moi les points essentiels du document Guide_CHLOE_AI_Architecture.md",
         "id": "msg_1793537134365_wo2m",
         "timestamp": "2026-11-01T12:45:34.365Z"
+      }
+    ],
+    "conv_1793644744824": [
+      {
+        "role": "user",
+        "content": "Planifie ma journée avec un rappel",
+        "id": "msg_1793644751185_k6cz",
+        "timestamp": "2026-11-02T18:39:11.185Z"
       }
     ]
   }
